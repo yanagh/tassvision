@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitrac — Grow Your Store Revenue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #07080F;
+    --ink2:   #10132A;
+    --blue:   #00C8FF;
+    --blue2:  #006EFF;
+    --orange: #FF5A1F;
+    --green:  #00E676;
+    --white:  #F0F4FF;
+    --muted:  #8892B4;
+    --card:   rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Deck ─────────────────────────────────────────── */
+  .deck {
+    width: 100vw; height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.55s cubic-bezier(.77,0,.18,1), transform 0.55s cubic-bezier(.77,0,.18,1);
+    will-change: transform, opacity;
+    overflow: hidden;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  /* ── Shared slide background shapes ──────────────── */
+  .slide::before, .slide::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Nav ─────────────────────────────────────────── */
+  .nav {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    background: rgba(7,8,15,0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 20px;
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s, width 0.3s;
+  }
+  .dot.active {
+    background: var(--blue);
+    transform: scale(1.3);
+    width: 22px;
+    border-radius: 4px;
+  }
+
+  .arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    backdrop-filter: blur(10px);
+  }
+  .arrow:hover { background: rgba(0,200,255,0.12); border-color: var(--blue); }
+  .arrow svg { width: 20px; height: 20px; fill: none; stroke: var(--white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow.left { left: 24px; }
+  .arrow.right { right: 24px; }
+
+  /* slide counter */
+  .counter {
+    position: fixed;
+    top: 24px; right: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    z-index: 100;
+  }
+  .counter span { color: var(--blue); }
+
+  /* ── Logos bar ───────────────────────────────────── */
+  .logo-bar {
+    position: fixed;
+    top: 16px; left: 28px;
+    display: flex; align-items: center; gap: 16px;
+    z-index: 100;
+  }
+  .logo-bar .tv-logo {
+    height: 28px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+  }
+  .logo-bar .sep {
+    width: 1px; height: 36px;
+    background: rgba(255,255,255,0.2);
+  }
+  .logo-bar .pulsar-logo {
+    height: 60px;
+    object-fit: contain;
+    filter: none;
+    opacity: 1;
+  }
+  /* On white-bg slides invert the TassVision logo */
+  .slide.light-bg ~ * .logo-bar .tv-logo { filter: brightness(0); opacity: 0.7; }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 1 — COVER  (25% more compact)
+  ═══════════════════════════════════════════════════ */
+  #s1 {
+    background: var(--ink);
+    text-align: center;
+  }
+  #s1::before {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,200,255,0.15) 0%, transparent 70%);
+    top: -150px; right: -150px;
+  }
+  #s1::after {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(255,90,31,0.1) 0%, transparent 70%);
+    bottom: -100px; left: -80px;
+  }
+  #s1 .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 0;
+  }
+  #s1 .content { position: relative; z-index: 1; }
+  #s1 .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  #s1 .eyebrow::before, #s1 .eyebrow::after {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--blue);
+    opacity: 0.6;
+  }
+  #s1 h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(54px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    background: linear-gradient(135deg, #fff 30%, var(--blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 18px;
+  }
+  #s1 .sub {
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 300;
+    color: rgba(240,244,255,0.7);
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+  #s1 .cta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 11px 24px;
+    border-radius: 100px;
+    box-shadow: 0 0 30px rgba(0,200,255,0.3);
+  }
+  #s1 .vitrac-hero-logo {
+    width: 120px;
+    margin-bottom: 20px;
+    filter: brightness(0) invert(1);
+  }
+  .intro-btn {
+    margin-top: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.35);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 14px 36px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s, color 0.25s;
+  }
+  .intro-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.7);
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+  ═══════════════════════════════════════════════════ */
+  #s2 {
+    background: #0D0E1C;
+  }
+  #s2::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,90,31,0.12) 0%, transparent 70%);
+    top: -200px; left: -100px;
+  }
+  #s2 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s2 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s2 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 6.5vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 52px;
+    max-width: 800px;
+  }
+  #s2 h2 em { color: var(--orange); font-style: normal; }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .pain-card {
+    background: rgba(255,90,31,0.06);
+    border: 1px solid rgba(255,90,31,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .pain-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: rgba(255,90,31,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+  .pain-card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+  .pain-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 3 — WHAT IS VITRAC
+  ═══════════════════════════════════════════════════ */
+  #s3 {
+    background: linear-gradient(135deg, #050917 0%, #0A1540 100%);
+  }
+  #s3::before {
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(0,200,255,0.08) 0%, transparent 65%);
+    top: -300px; right: -300px;
+  }
+  #s3 .inner {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%; max-width: 1200px;
+  }
+  #s3 .left .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--blue); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s3 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 6vw, 88px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+  #s3 h2 em { color: var(--blue); font-style: normal; }
+  #s3 .desc {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(240,244,255,0.75);
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+  #s3 .highlight-box {
+    background: linear-gradient(135deg, rgba(0,200,255,0.1), rgba(0,110,255,0.1));
+    border: 1px solid rgba(0,200,255,0.25);
+    border-radius: 16px;
+    padding: 22px 26px;
+    font-size: 15px;
+    color: var(--blue);
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .vitrac-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .camera-ring {
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,200,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    animation: rotate 20s linear infinite;
+  }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+  .camera-ring::before {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,200,255,0.15);
+  }
+  .camera-center {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,200,255,0.15), rgba(0,110,255,0.05));
+    border: 2px solid rgba(0,200,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+    animation: rotate 20s linear infinite reverse;
+    box-shadow: 0 0 60px rgba(0,200,255,0.15), inset 0 0 30px rgba(0,200,255,0.05);
+  }
+  .orbit-dot {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 20px var(--blue);
+    top: -6px; left: 50%;
+    transform: translateX(-50%);
+  }
+  .orbit-dot:nth-child(2) { top: auto; bottom: -6px; background: var(--orange); box-shadow: 0 0 20px var(--orange); }
+  .orbit-dot:nth-child(3) { top: 50%; left: -6px; transform: translateY(-50%); background: var(--green); box-shadow: 0 0 20px var(--green); }
+  .data-tags {
+    position: absolute;
+    right: -40px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .data-tag {
+    background: rgba(0,200,255,0.08);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 4 — HOW IT WORKS
+  ═══════════════════════════════════════════════════ */
+  #s4 {
+    background: var(--ink);
+    text-align: center;
+  }
+  #s4::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,230,118,0.08) 0%, transparent 70%);
+    bottom: -200px; right: -200px;
+  }
+  #s4 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s4 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s4 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(50px, 6vw, 84px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 60px;
+  }
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .steps-row::before {
+    content: '';
+    position: absolute;
+    top: 44px; left: calc(16.67% + 20px);
+    width: calc(66.66% - 40px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    z-index: 0;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .step-num {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+  .step:nth-child(1) .step-num { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: var(--ink); box-shadow: 0 0 40px rgba(0,200,255,0.3); }
+  .step:nth-child(2) .step-num { background: linear-gradient(135deg, #7B3FF2, var(--blue2)); color: var(--white); box-shadow: 0 0 40px rgba(123,63,242,0.3); }
+  .step:nth-child(3) .step-num { background: linear-gradient(135deg, var(--green), #00A86B); color: var(--ink); box-shadow: 0 0 40px rgba(0,230,118,0.3); }
+  .step-emoji { font-size: 30px; }
+  .step h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .step p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 5 — VISITOR COUNTING
+  ═══════════════════════════════════════════════════ */
+  #s5 {
+    background: #080B1A;
+  }
+  #s5::before {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,110,255,0.12) 0%, transparent 65%);
+    top: -200px; left: -200px;
+  }
+  #s5 .inner {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%; max-width: 1200px;
+  }
+  #s5 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--blue); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s5 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5.5vw, 82px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+  #s5 h2 em { color: var(--blue); font-style: normal; }
+  #s5 .benefits {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #s5 .benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    color: rgba(240,244,255,0.8);
+    line-height: 1.5;
+  }
+  #s5 .benefits li::before {
+    content: '→';
+    color: var(--blue);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Bar chart visual */
+  .bar-chart {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-chart-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 160px;
+  }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .bar-fill {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.8s ease;
+    position: relative;
+    min-height: 4px;
+  }
+  .bar-fill.peak { background: linear-gradient(180deg, var(--blue), var(--blue2)); box-shadow: 0 -4px 20px rgba(0,200,255,0.3); }
+  .bar-fill.normal { background: rgba(0,200,255,0.35); }
+  .bar-day {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .bar-num {
+    position: absolute;
+    top: -22px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+  .big-stat {
+    margin-top: 24px;
+    text-align: center;
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(0,200,255,0.06);
+    border: 1px solid rgba(0,200,255,0.15);
+  }
+  .big-stat .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: var(--blue);
+    line-height: 1;
+  }
+  .big-stat .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 6 — HEAT MAPS
+  ═══════════════════════════════════════════════════ */
+  #s6 {
+    background: #0B0A14;
+  }
+  #s6::before {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,90,31,0.1) 0%, transparent 65%);
+    bottom: -200px; right: -200px;
+  }
+  #s6 .inner {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%; max-width: 1200px;
+  }
+  #s6 .right { order: -1; }
+  #s6 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--orange); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s6 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5.5vw, 82px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+  #s6 h2 em { color: var(--orange); font-style: normal; }
+  #s6 .benefits {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  #s6 .benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    color: rgba(240,244,255,0.8);
+    line-height: 1.5;
+  }
+  #s6 .benefits li::before {
+    content: '→';
+    color: var(--orange);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  #s6 .insight-box {
+    background: rgba(255,90,31,0.08);
+    border: 1px solid rgba(255,90,31,0.2);
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 14px;
+    color: rgba(240,244,255,0.8);
+    line-height: 1.6;
+  }
+  #s6 .insight-box strong { color: var(--orange); }
+
+  /* Store heatmap visual */
+  .heatmap-visual {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+  }
+  .heatmap-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .store-floor {
+    width: 100%;
+    aspect-ratio: 4/3;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .heat-zone {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(30px);
+  }
+  .hz1 { width: 180px; height: 180px; background: rgba(255,0,0,0.45); top: 10%; left: 10%; }
+  .hz2 { width: 140px; height: 140px; background: rgba(255,120,0,0.4); top: 40%; right: 15%; }
+  .hz3 { width: 100px; height: 100px; background: rgba(255,220,0,0.3); bottom: 15%; left: 35%; }
+  .hz4 { width: 80px; height: 80px; background: rgba(0,200,255,0.25); bottom: 20%; right: 30%; }
+  .floor-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  .store-label {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.05em;
+  }
+  .store-label.entrance { bottom: 6px; left: 50%; transform: translateX(-50%); }
+  .store-label.l1 { top: 12%; left: 8%; color: rgba(255,100,100,0.8); }
+  .store-label.l2 { top: 42%; right: 10%; color: rgba(255,160,50,0.8); }
+  .store-label.l3 { bottom: 18%; left: 30%; color: rgba(255,220,0,0.7); }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 7 — REPORTS & DASHBOARD
+  ═══════════════════════════════════════════════════ */
+  #s7 {
+    background: #060D1A;
+    text-align: center;
+  }
+  #s7::before {
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(0,230,118,0.07) 0%, transparent 65%);
+    top: -300px; right: -300px;
+  }
+  #s7 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s7 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s7 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(50px, 6vw, 86px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 48px;
+  }
+  #s7 h2 em { color: var(--green); font-style: normal; }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: left;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover { border-color: rgba(0,230,118,0.3); background: rgba(0,230,118,0.05); }
+  .feature-card:hover::before { opacity: 1; }
+  .feat-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .feature-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 8 — TRUSTED BY
+  ═══════════════════════════════════════════════════ */
+  #s8 {
+    background: #070811;
+    text-align: center;
+  }
+  #s8::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 65%);
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+  }
+  #s8 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1000px;
+  }
+  #s8 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--blue); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s8 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5.5vw, 80px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+  }
+  #s8 .sub {
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 52px;
+    font-weight: 300;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 52px;
+  }
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 24px;
+  }
+  .stat-box .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-box .label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 400;
+  }
+  .brands-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    opacity: 0.5;
+    filter: grayscale(1) brightness(2);
+  }
+  .brands-strip img {
+    height: 28px;
+    object-fit: contain;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 9 — PRICING
+  ═══════════════════════════════════════════════════ */
+  #s9 {
+    background: #080C18;
+    text-align: center;
+  }
+  #s9::before {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(123,63,242,0.1) 0%, transparent 65%);
+    bottom: -200px; left: -200px;
+  }
+  #s9 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s9 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: #A78BFA; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s9 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5.5vw, 80px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+
+  /* Billing toggle */
+  .billing-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 8px;
+    margin-bottom: 36px;
+    cursor: pointer;
+  }
+  .toggle-btn {
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    color: var(--muted);
+  }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #7B3FF2, var(--blue2));
+    color: var(--white);
+    box-shadow: 0 4px 20px rgba(123,63,242,0.3);
+  }
+  .save-badge {
+    font-size: 11px;
+    background: rgba(0,230,118,0.15);
+    color: var(--green);
+    border: 1px solid rgba(0,230,118,0.3);
+    border-radius: 100px;
+    padding: 3px 10px;
+    font-weight: 600;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .plan-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 20px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+    text-align: left;
+    overflow: hidden;
+  }
+  .plan-card.popular {
+    border-color: rgba(0,200,255,0.4);
+    background: rgba(0,200,255,0.05);
+    transform: translateY(-8px);
+  }
+  .popular-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .plan-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    color: var(--white);
+  }
+  .plan-card.popular .plan-name { color: var(--blue); }
+  .plan-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+  .plan-price {
+    margin-bottom: 6px;
+  }
+  .plan-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--white);
+  }
+  .plan-currency {
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+  .plan-period {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .plan-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(240,244,255,0.7);
+  }
+  .plan-features li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 10 — CTA
+  ═══════════════════════════════════════════════════ */
+  #s10 {
+    background: var(--ink);
+    text-align: center;
+    overflow: hidden;
+  }
+  #s10 .bg-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(0,200,255,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 50%, rgba(255,90,31,0.08) 0%, transparent 50%);
+  }
+  #s10 .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  #s10 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 800px;
+  }
+  #s10 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  #s10 .tag::before, #s10 .tag::after {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--green);
+    opacity: 0.5;
+  }
+  #s10 h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 104px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 30%, var(--blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #s10 .sub {
+    font-size: 18px;
+    color: rgba(240,244,255,0.6);
+    margin-bottom: 52px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .contact-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 24px;
+    padding: 40px 48px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green), var(--blue));
+  }
+  .contact-company {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .contact-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    letter-spacing: 0.05em;
+  }
+  .contact-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: var(--ink);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.08em;
+    padding: 16px 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,200,255,0.3);
+  }
+  .contact-phone .phone-icon { font-size: 24px; }
+  .pulsar-logo-big {
+    height: 44px;
+    object-fit: contain;
+    margin-bottom: 16px;
+  }
+
+  /* ── Animations ───────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 40px rgba(0,200,255,0.3); }
+    50%       { box-shadow: 0 0 70px rgba(0,200,255,0.6); }
+  }
+  .slide.active > * {
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .slide.active > *:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active > *:nth-child(3) { animation-delay: 0.2s; }
+
+  /* ── Responsive ───────────────────────────────── */
+  @media (max-width: 900px) {
+    .slide { padding: 40px 32px; }
+    #s3 .inner, #s5 .inner, #s6 .inner { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-row { grid-template-columns: 1fr; gap: 32px; }
+    .steps-row::before { display: none; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr; gap: 16px; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ═══════════════════════════════════════════════════
+     LIGHT SLIDE OVERRIDES  (slides 2 – 8)
+  ═══════════════════════════════════════════════════ */
+
+  /* S2 — Problem: clean white + orange */
+  #s2 { background: #ffffff; }
+  #s2 h2 { color: #07080F; }
+  #s2 .tag { color: var(--orange); }
+  .pain-card { background: #fff5f1; border-color: rgba(255,90,31,0.18); }
+  .pain-icon { background: rgba(255,90,31,0.10); }
+  .pain-card h3 { color: #07080F; }
+  .pain-card p  { color: #5A6080; }
+  #s2::before { background: radial-gradient(circle, rgba(255,90,31,0.07) 0%, transparent 70%); }
+
+  /* S3 — What is Vitrac: pale blue-white */
+  #s3 { background: #F4F8FF; }
+  #s3::before { background: radial-gradient(circle, rgba(0,110,255,0.06) 0%, transparent 65%); }
+  #s3 h2 { color: #07080F; }
+  #s3 h2 em { color: var(--blue2); }
+  #s3 .desc { color: #3C4370; }
+  #s3 .highlight-box {
+    background: rgba(0,110,255,0.06);
+    border-color: rgba(0,110,255,0.2);
+    color: var(--blue2);
+  }
+  .camera-ring { border-color: rgba(0,110,255,0.25); }
+  .camera-ring::before { border-color: rgba(0,110,255,0.12); }
+  .camera-center {
+    background: radial-gradient(circle, rgba(0,110,255,0.12), rgba(0,110,255,0.03));
+    border-color: rgba(0,110,255,0.3);
+    box-shadow: 0 0 50px rgba(0,110,255,0.12);
+  }
+  .data-tag { background: rgba(0,110,255,0.06); border-color: rgba(0,110,255,0.18); color: var(--blue2); }
+
+  /* S4 — How it works: bright white */
+  #s4 { background: #ffffff; }
+  #s4::before { background: radial-gradient(circle, rgba(0,180,100,0.06) 0%, transparent 70%); }
+  #s4 h2 { color: #07080F; }
+  #s4 .tag { color: #00A86B; }
+  .step h3 { color: #07080F; }
+  .step p  { color: #5A6080; }
+  .steps-row::before { background: linear-gradient(90deg, var(--blue2), #00A86B); opacity: 0.5; }
+
+  /* S5 — Visitor counting: white */
+  #s5 { background: #ffffff; }
+  #s5::before { background: radial-gradient(circle, rgba(0,110,255,0.07) 0%, transparent 65%); }
+  #s5 h2 { color: #07080F; }
+  #s5 h2 em { color: var(--blue2); }
+  #s5 .tag { color: var(--blue2); }
+  #s5 .benefits li { color: #3C4370; }
+  #s5 .benefits li::before { color: var(--blue2); }
+  .bar-chart { background: #F4F8FF; border-color: rgba(0,110,255,0.12); }
+  .bar-chart-label { color: #8892B4; }
+  .bar-fill.normal { background: rgba(0,110,255,0.25); }
+  .bar-fill.peak   { background: linear-gradient(180deg, var(--blue2), #0040CC); box-shadow: 0 -4px 18px rgba(0,110,255,0.25); }
+  .bar-day  { color: #8892B4; }
+  .bar-num  { color: var(--blue2); }
+  .big-stat { background: rgba(0,110,255,0.06); border-color: rgba(0,110,255,0.15); }
+  .big-stat .num   { color: var(--blue2); }
+  .big-stat .label { color: #5A6080; }
+
+  /* S6 — Heat maps: warm cream */
+  #s6 { background: #FFF7F4; }
+  #s6::before { background: radial-gradient(circle, rgba(255,90,31,0.07) 0%, transparent 65%); }
+  #s6 h2 { color: #07080F; }
+  #s6 h2 em { color: var(--orange); }
+  #s6 .tag { color: var(--orange); }
+  #s6 .benefits li { color: #3C4370; }
+  #s6 .benefits li::before { color: var(--orange); }
+  #s6 .insight-box { background: rgba(255,90,31,0.06); border-color: rgba(255,90,31,0.18); color: #3C4370; }
+  #s6 .insight-box strong { color: var(--orange); }
+  .heatmap-visual { background: #fff; border-color: rgba(0,0,0,0.08); }
+  .heatmap-title  { color: #8892B4; }
+  .store-floor    { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06); }
+  .floor-grid     { background-image: linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px), linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px); }
+  .store-label    { color: rgba(0,0,0,0.4); }
+  .store-label.l1 { color: rgba(200,40,40,0.8); }
+  .store-label.l2 { color: rgba(200,100,20,0.8); }
+  .store-label.l3 { color: rgba(160,140,0,0.8); }
+  .legend-item    { color: #8892B4; }
+
+  /* S7 — Reports: fresh white-green */
+  #s7 { background: #F4FBF7; }
+  #s7::before { background: radial-gradient(circle, rgba(0,180,100,0.06) 0%, transparent 65%); }
+  #s7 h2 { color: #07080F; }
+  #s7 h2 em { color: #00A86B; }
+  #s7 .tag { color: #00A86B; }
+  .feature-card { background: #ffffff; border-color: rgba(0,0,0,0.07); }
+  .feature-card::before { background: linear-gradient(90deg,transparent,#00A86B,transparent); }
+  .feature-card:hover { border-color: rgba(0,168,107,0.3); background: rgba(0,168,107,0.04); }
+  .feature-card h3 { color: #07080F; }
+  .feature-card p  { color: #5A6080; }
+
+  /* S8 — Trusted by: soft lavender-white */
+  #s8 { background: #F2F5FF; }
+  #s8::before { background: radial-gradient(circle, rgba(0,110,255,0.06) 0%, transparent 65%); }
+  #s8 h2  { color: #07080F; }
+  #s8 .sub { color: #5A6080; }
+  #s8 .tag { color: var(--blue2); }
+  .stat-box { background: #ffffff; border-color: rgba(0,0,0,0.07); }
+  .stat-box .label { color: #5A6080; }
+  .brands-strip { opacity: 0.45; filter: grayscale(1) brightness(0.2); }
+
+  /* Nav adapts on light slides */
+  body.is-light .nav {
+    background: rgba(255,255,255,0.85);
+    border-color: rgba(0,0,0,0.1);
+  }
+  body.is-light .dot { background: #c0c8e0; }
+  body.is-light .dot.active { background: var(--blue2); }
+  body.is-light .arrow {
+    background: rgba(255,255,255,0.8);
+    border-color: rgba(0,0,0,0.1);
+  }
+  body.is-light .arrow svg { stroke: #07080F; }
+  body.is-light .arrow:hover { background: rgba(0,110,255,0.1); border-color: var(--blue2); }
+  body.is-light .counter { color: #8892B4; }
+  body.is-light .counter span { color: var(--blue2); }
+  body.is-light .logo-bar .sep { background: rgba(0,0,0,0.15); }
+  body.is-light .tv-logo { filter: brightness(0) !important; opacity: 0.75 !important; }
+</style>
+</head>
+<body>
+
+<!-- Logo bar -->
+<div class="logo-bar">
+  <img class="tv-logo" src="https://tassvision.ai/assets/logo/logo.svg" alt="TassVision">
+  <div class="sep"></div>
+  <img class="pulsar-logo" src="pulsar-logo.png" alt="Pulsar">
+</div>
+
+<!-- Slide counter -->
+<div class="counter"><span id="cur">01</span> / 10</div>
+
+<!-- Left arrow -->
+<div class="arrow left" id="prevBtn">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+</div>
+
+<!-- Right arrow -->
+<div class="arrow right" id="nextBtn">
+  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+</div>
+
+<!-- Dot navigation -->
+<div class="nav" id="dots"></div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 1 — COVER                                ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide active" id="s1">
+  <div class="grid-overlay"></div>
+  <div class="content" style="display:flex;flex-direction:column;align-items:center;gap:0;">
+    <h1>YOUR STORE IS FULL<br>OF MONEY<br>YOU CAN'T SEE.</h1>
+    <button class="intro-btn" onclick="document.getElementById('nextBtn').click()">
+      Introducing Vitrac &nbsp;→
+    </button>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 2 — THE PROBLEM                          ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s2">
+  <div class="inner">
+    <div class="tag">// The Problem</div>
+    <h2>YOUR STORE IS LOSING MONEY<br>AND YOU DON'T KNOW <em>WHY</em></h2>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">🚶</div>
+        <div>
+          <h3>Invisible Visitors</h3>
+          <p>You know how much you sell — but not how many people walked past without buying. That gap is pure lost revenue.</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🗺️</div>
+        <div>
+          <h3>Dead Zones in Your Store</h3>
+          <p>Some shelves get zero attention. You're paying full rent for space that customers never visit.</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🕐</div>
+        <div>
+          <h3>Wrong Staffing Hours</h3>
+          <p>Too many staff when it's quiet, not enough when it's busy. Both cost you money every single day.</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🎲</div>
+        <div>
+          <h3>Decisions Based on Gut Feel</h3>
+          <p>Where to put promotions? When to run sales? Right now it's guesswork. It doesn't have to be.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 3 — WHAT IS VITRAC                       ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s3">
+  <div class="inner">
+    <div class="left">
+      <div class="tag">// The Solution</div>
+      <h2>MEET <em>VITRAC</em> — YOUR STORE'S SMARTEST EMPLOYEE</h2>
+      <p class="desc">
+        Vitrac connects to your store's cameras and silently watches everything — counting visitors, tracking movement, and spotting patterns — then translates all of it into simple, actionable insights you can act on today.
+      </p>
+      <div class="highlight-box">
+        💡 No new hardware needed in most cases. No tech skills required. Works 24 hours a day, 7 days a week — automatically.
+      </div>
+    </div>
+    <div class="right">
+      <div class="vitrac-visual">
+        <div class="camera-ring">
+          <div class="orbit-dot"></div>
+          <div class="orbit-dot"></div>
+          <div class="orbit-dot"></div>
+          <div class="camera-center">📷</div>
+        </div>
+        <div class="data-tags">
+          <div class="data-tag">👥 247 visitors today</div>
+          <div class="data-tag">📊 62% conv. rate</div>
+          <div class="data-tag">🔥 Zone A: hottest</div>
+          <div class="data-tag">⏱️ Peak: 14:00–16:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 4 — HOW IT WORKS                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s4">
+  <div class="inner">
+    <div class="tag">// How It Works</div>
+    <h2>UP AND RUNNING IN 3 SIMPLE STEPS</h2>
+    <div class="steps-row">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-emoji">📡</div>
+        <h3>Connect</h3>
+        <p>We connect Vitrac to your existing security cameras. No new equipment, no construction, no downtime for your store.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-emoji">🤖</div>
+        <h3>Analyse</h3>
+        <p>Vitrac's AI watches your store continuously — counting every visitor, tracking movement, identifying your busiest hours and zones.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-emoji">📱</div>
+        <h3>Grow</h3>
+        <p>You receive clear, simple reports on your phone or computer. No spreadsheets, no tech skills — just straight answers.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 5 — VISITOR COUNTING                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s5">
+  <div class="inner">
+    <div class="left">
+      <div class="tag">// Feature 01</div>
+      <h2>KNOW <em>EXACTLY</em> WHO COMES IN AND WHEN</h2>
+      <ul class="benefits">
+        <li>See how many people enter your store every hour, every day</li>
+        <li>Find your peak hours — staff smarter, sell more</li>
+        <li>Track your conversion rate: how many visitors actually buy</li>
+        <li>Compare this week vs. last week — spot trends instantly</li>
+        <li>Measure the real impact of promotions and window displays</li>
+      </ul>
+    </div>
+    <div class="right">
+      <div class="bar-chart">
+        <div class="bar-chart-label">Weekly Visitor Count — This Store</div>
+        <div class="bars">
+          <div class="bar-col">
+            <div class="bar-fill normal" style="height:55%"><span class="bar-num">184</span></div>
+            <div class="bar-day">Mon</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill normal" style="height:68%"><span class="bar-num">227</span></div>
+            <div class="bar-day">Tue</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill normal" style="height:62%"><span class="bar-num">206</span></div>
+            <div class="bar-day">Wed</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill normal" style="height:74%"><span class="bar-num">245</span></div>
+            <div class="bar-day">Thu</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill peak" style="height:100%"><span class="bar-num">332</span></div>
+            <div class="bar-day">Fri</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill peak" style="height:92%"><span class="bar-num">305</span></div>
+            <div class="bar-day">Sat</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill normal" style="height:40%"><span class="bar-num">132</span></div>
+            <div class="bar-day">Sun</div>
+          </div>
+        </div>
+        <div class="big-stat">
+          <div class="num">1,631</div>
+          <div class="label">Total visitors this week · +18% vs. last week</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 6 — HEAT MAPS                            ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s6">
+  <div class="inner">
+    <div class="right">
+      <div class="tag">// Feature 02</div>
+      <h2>SEE WHICH PARTS OF YOUR STORE<br>MAKE YOU <em>MONEY</em></h2>
+      <ul class="benefits">
+        <li>Visual heat map shows which zones customers love most</li>
+        <li>Identify dead zones where stock is invisible to shoppers</li>
+        <li>Move your best products to the hottest spots — instantly boost sales</li>
+        <li>Test store layouts and see the difference in real data</li>
+      </ul>
+      <div class="insight-box">
+        <strong>Real example:</strong> A store moved their new arrivals from a side wall to a hot zone identified by Vitrac — and saw a <strong>31% increase</strong> in sales of those items within two weeks. No extra budget. Just smarter placement.
+      </div>
+    </div>
+    <div class="left">
+      <div class="heatmap-visual">
+        <div class="heatmap-title">Store Floor Heat Map — Live View</div>
+        <div class="store-floor">
+          <div class="floor-grid"></div>
+          <div class="heat-zone hz1"></div>
+          <div class="heat-zone hz2"></div>
+          <div class="heat-zone hz3"></div>
+          <div class="heat-zone hz4"></div>
+          <div class="store-label l1">🔴 HOT — 68%</div>
+          <div class="store-label l2">🟠 WARM — 44%</div>
+          <div class="store-label l3">🟡 MILD — 28%</div>
+          <div class="store-label entrance">⬆ ENTRANCE</div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#ff3300"></div>Very High</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ff7800"></div>High</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ffdc00"></div>Medium</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#00c8ff"></div>Low</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 7 — REPORTS & DASHBOARD                  ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s7">
+  <div class="inner">
+    <div class="tag">// Feature 03</div>
+    <h2>YOUR STORE REPORT — <em>AUTOMATIC</em> &amp; SIMPLE</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feat-icon">📅</span>
+        <h3>Daily Reports</h3>
+        <p>Every morning, see yesterday's full performance — visitor count, busiest hours, conversion rate — automatically delivered.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feat-icon">📈</span>
+        <h3>Trend Tracking</h3>
+        <p>Watch how your store improves week over week. See which changes worked and which didn't — in plain charts.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feat-icon">📱</span>
+        <h3>Access Anywhere</h3>
+        <p>Check your store's performance from your phone, tablet, or computer. At home, on the road — always in the picture.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feat-icon">🏪</span>
+        <h3>Multi-Store View</h3>
+        <p>Own more than one location? Compare all your stores in one dashboard and see which is performing best.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feat-icon">⚡</span>
+        <h3>Real-Time Alerts</h3>
+        <p>Get notified when your store is unusually busy or quiet — so you can react instantly and never miss a peak.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feat-icon">🔒</span>
+        <h3>Private &amp; Secure</h3>
+        <p>Vitrac analyses movement only — no faces stored, no personal data collected. Fully compliant and private.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 8 — TRUSTED BY                           ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s8">
+  <div class="inner">
+    <div class="tag">// Trusted By</div>
+    <h2>RETAILERS ACROSS THE REGION<br>ALREADY USE VITRAC</h2>
+    <p class="sub">From single boutiques to large retail chains — Vitrac is built for every physical store.</p>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num">500+</div>
+        <div class="label">Stores using Vitrac globally</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">10M+</div>
+        <div class="label">Visitors counted per month</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">15%</div>
+        <div class="label">Average revenue uplift within 3 months</div>
+      </div>
+    </div>
+    <div class="brands-strip">
+      <img src="https://tassvision.ai/assets/brands/magnit.png" alt="Magnit">
+      <img src="https://tassvision.ai/assets/brands/flo.png" alt="Flo">
+      <img src="https://tassvision.ai/assets/brands/red-tag.png" alt="Red Tag">
+      <img src="https://tassvision.ai/assets/brands/indenim.png" alt="inDenim">
+      <img src="https://tassvision.ai/assets/brands/texno.png" alt="Texno">
+      <img src="https://tassvision.ai/assets/brands/oxymed.png" alt="Oxymed">
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 9 — PRICING                              ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s9">
+  <div class="inner">
+    <div class="tag">// Pricing</div>
+    <h2>SIMPLE, TRANSPARENT PRICING</h2>
+
+    <div class="billing-toggle">
+      <div class="toggle-btn active" id="monthlyBtn" onclick="setPricing('monthly')">Monthly</div>
+      <div class="toggle-btn" id="annualBtn" onclick="setPricing('annual')">Annual <span class="save-badge">Save up to 20%</span></div>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Standard -->
+      <div class="plan-card">
+        <div class="plan-name">Standard</div>
+        <div class="plan-desc">Perfect for a single-location store getting started with data.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p1">100</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp1">per month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>1 store location</li>
+          <li>Visitor counting</li>
+          <li>Daily reports</li>
+          <li>7-day data history</li>
+          <li>Email support</li>
+        </ul>
+      </div>
+      <!-- Plus -->
+      <div class="plan-card popular">
+        <div class="popular-badge">Most Popular</div>
+        <div class="plan-name">Plus</div>
+        <div class="plan-desc">Ideal for growing stores that want deeper insights.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p2">170</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp2">per month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Up to 3 locations</li>
+          <li>Visitor counting + heat maps</li>
+          <li>Daily &amp; weekly reports</li>
+          <li>30-day data history</li>
+          <li>Zone analytics</li>
+          <li>Priority support</li>
+        </ul>
+      </div>
+      <!-- Professional -->
+      <div class="plan-card">
+        <div class="plan-name">Professional</div>
+        <div class="plan-desc">For established retailers ready to optimise every corner.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p3">240</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp3">per month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Up to 10 locations</li>
+          <li>Full analytics suite</li>
+          <li>Real-time alerts</li>
+          <li>90-day data history</li>
+          <li>Queue detection</li>
+          <li>Dedicated account manager</li>
+        </ul>
+      </div>
+      <!-- Enterprise -->
+      <div class="plan-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-desc">Unlimited scale for large retail chains and networks.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p4">410</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp4">per month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Unlimited locations</li>
+          <li>Full analytics suite</li>
+          <li>Custom integrations</li>
+          <li>Unlimited data history</li>
+          <li>SLA guarantee</li>
+          <li>On-site onboarding</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 10 — CTA                                 ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s10">
+  <div class="bg-glow"></div>
+  <div class="grid-overlay"></div>
+  <div class="inner">
+    <div class="tag">Get Started Today</div>
+    <h2>READY TO GROW<br>YOUR STORE?</h2>
+    <p class="sub">Contact your local Vitrac representative today for a free consultation and live demo — no commitment, no tech knowledge needed.</p>
+
+    <div class="contact-card">
+      <img class="pulsar-logo-big" src="pulsar-logo.png" alt="Pulsar">
+      <div class="contact-company">LLC PULSAR</div>
+      <div class="contact-id">ID: 438112533 &nbsp;·&nbsp; Authorised Vitrac Representative</div>
+      <div class="contact-phone">
+        <span class="phone-icon">📞</span>
+        599 99 20 30
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:32px;opacity:0.5;">
+      <img src="https://tassvision.ai/assets/logo/logo.svg" alt="TassVision" style="height:24px;filter:brightness(0) invert(1);">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">tassvision.ai/products/vitrac</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Scripts ────────────────────────────────────── -->
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsEl = document.getElementById('dots');
+  const cur = document.getElementById('cur');
+  let current = 0;
+  let isAnimating = false;
+
+  // Slides 2–8 (index 1–7) are light-background slides
+  const lightSlides = new Set([1, 2, 3, 4, 5, 6, 7]);
+
+  function applyTheme(idx) {
+    document.body.classList.toggle('is-light', lightSlides.has(idx));
+  }
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  applyTheme(0);
+
+  function goTo(idx) {
+    if (isAnimating || idx === current || idx < 0 || idx >= slides.length) return;
+    isAnimating = true;
+
+    const prev = current;
+    current = idx;
+
+    slides[prev].classList.add('exit-left');
+    slides[prev].classList.remove('active');
+
+    setTimeout(() => { slides[prev].classList.remove('exit-left'); }, 600);
+
+    slides[current].classList.add('active');
+    applyTheme(current);
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+
+    cur.textContent = String(current + 1).padStart(2, '0');
+
+    setTimeout(() => { isAnimating = false; }, 600);
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+  document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+  });
+
+  // Touch swipe
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 60) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+    touchX = null;
+  });
+
+  // Pricing toggle
+  const monthly = { p1: '100', p2: '170', p3: '240', p4: '410', period: 'per month' };
+  const annual  = { p1: '960', p2: '1,610', p3: '1,940', p4: '3,920', period: 'per year (billed annually)' };
+
+  function setPricing(mode) {
+    const data = mode === 'monthly' ? monthly : annual;
+    ['p1','p2','p3','p4'].forEach(id => {
+      document.getElementById(id).textContent = data[id];
+    });
+    ['pp1','pp2','pp3','pp4'].forEach(id => {
+      document.getElementById(id).textContent = data.period;
+    });
+    document.getElementById('monthlyBtn').classList.toggle('active', mode === 'monthly');
+    document.getElementById('annualBtn').classList.toggle('active', mode === 'annual');
+  }
+</script>
+</body>
+</html>
