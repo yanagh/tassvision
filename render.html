@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vitrac — Render Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Pull in entire stylesheet from index.html via @import-equivalent: just inline */
+</style>
+<link rel="stylesheet" href="render-shim.css">
+</head>
+<body>
+<!-- Shared chrome (logo bar, counter) is rendered per-slide separately to keep things consistent -->
+
+<!-- Inject the slides 1..10 as static blocks. We achieve this by including the original markup
+     but overriding the slide CSS so each becomes a static 1920x1080 block. -->
+
+<div class="frame" id="f1"></div>
+<div class="frame" id="f2"></div>
+<div class="frame" id="f3"></div>
+<div class="frame" id="f4"></div>
+<div class="frame" id="f5"></div>
+<div class="frame" id="f6"></div>
+<div class="frame" id="f7"></div>
+<div class="frame" id="f8"></div>
+<div class="frame" id="f9"></div>
+<div class="frame" id="f10"></div>
+
+<script>
+  // Load the actual deck HTML via fetch, extract each slide, and embed it into a fixed-size frame.
+  fetch('index.html')
+    .then(r => r.text())
+    .then(html => {
+      const dom = new DOMParser().parseFromString(html, 'text/html');
+      // Build a single combined <style> block from the source page
+      const styles = dom.querySelectorAll('style');
+      styles.forEach(s => document.head.appendChild(s.cloneNode(true)));
+      // Logo bar SVG / pulsar paths must remain
+      const logoBar = dom.querySelector('.logo-bar');
+      const counter = dom.querySelector('.counter');
+
+      // Treat every slide statically inside a fixed-size 1920x1080 stage
+      for (let i = 1; i <= 10; i++) {
+        const stage = document.getElementById('f' + i);
+        const slide = dom.querySelector('#s' + i).cloneNode(true);
+        // Force this slide to be visible at fixed size
+        slide.classList.add('active');
+        slide.style.position = 'relative';
+        slide.style.width = '1920px';
+        slide.style.height = '1080px';
+        slide.style.transform = 'none';
+        slide.style.opacity = '1';
+        slide.style.padding = '60px 80px';
+        slide.style.inset = 'auto';
+        // Append per-slide chrome
+        const frameLogo = logoBar.cloneNode(true);
+        const frameCounter = counter.cloneNode(true);
+        frameCounter.querySelector('#cur').textContent = String(i).padStart(2, '0');
+
+        // Light theme detection
+        const lightSlides = new Set([2, 3, 4, 5, 6, 7, 8]);
+        if (lightSlides.has(i)) {
+          document.body.classList.add('is-light-' + i);
+          // Apply per-frame light styles by wrapping in a class
+          stage.classList.add('is-light-frame');
+        }
+        stage.appendChild(slide);
+        stage.appendChild(frameLogo);
+        stage.appendChild(frameCounter);
+      }
+
+      // Mark ready for screenshot
+      document.body.dataset.ready = '1';
+      // Remove animations after first frame
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.slide').forEach(s => {
+          s.style.animation = 'none';
+        });
+      });
+    });
+</script>
+</body>
+</html>

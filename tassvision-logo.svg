@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 80">
+  <text x="0" y="58"
+        font-family="'Bebas Neue', Impact, sans-serif"
+        font-size="64"
+        letter-spacing="2"
+        fill="#000">TASSVISION</text>
+  <circle cx="354" cy="22" r="9" fill="#00C8FF"/>
+  <circle cx="354" cy="22" r="4" fill="#fff"/>
+</svg>
