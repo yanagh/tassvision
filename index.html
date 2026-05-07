@@ -141,17 +141,17 @@
     z-index: 100;
   }
   .logo-bar .tv-logo {
-    height: 28px;
+    height: 22px;
     object-fit: contain;
     filter: brightness(0) invert(1);
     opacity: 0.85;
   }
   .logo-bar .sep {
-    width: 1px; height: 36px;
+    width: 1px; height: 28px;
     background: rgba(255,255,255,0.2);
   }
   .logo-bar .pulsar-logo {
-    height: 60px;
+    height: 42px;
     object-fit: contain;
     filter: none;
     opacity: 1;
@@ -1342,6 +1342,551 @@
   body.is-light .counter span { color: var(--blue2); }
   body.is-light .logo-bar .sep { background: rgba(0,0,0,0.15); }
   body.is-light .tv-logo { filter: brightness(0) !important; opacity: 0.75 !important; }
+
+  /* ═══════════════════════════════════════════════════
+     WEBSITE COPY REFRESH — SLIDES 1–8 ONLY
+  ═══════════════════════════════════════════════════ */
+  .site-slide {
+    background: #f7f8fc !important;
+    color: #07080F;
+    text-align: left;
+    padding: 48px 70px;
+  }
+  .site-slide::before {
+    width: 760px; height: 760px;
+    background: radial-gradient(circle, rgba(119,3,252,0.10) 0%, transparent 68%) !important;
+    top: -280px; right: -260px;
+  }
+  .site-slide::after {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(0,200,255,0.10) 0%, transparent 70%) !important;
+    bottom: -220px; left: -160px;
+  }
+  .site-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1080px;
+  }
+  .site-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+    gap: 38px;
+    align-items: center;
+  }
+  .site-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7703fc;
+    margin-bottom: 11px;
+  }
+  .site-slide h1,
+  .site-slide h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #07080F !important;
+    -webkit-text-fill-color: currentColor;
+    background: none;
+    line-height: 0.94;
+    letter-spacing: 0.02em;
+  }
+  .site-slide h1 {
+    font-size: clamp(42px, 4.9vw, 72px);
+    margin-bottom: 15px;
+  }
+  .site-slide h2 {
+    font-size: clamp(34px, 4vw, 58px);
+    margin-bottom: 14px;
+  }
+  .site-slide h2 em,
+  .site-slide h1 em {
+    color: #7703fc;
+    font-style: normal;
+  }
+  .site-lead {
+    font-size: 22px;
+    line-height: 1.36;
+    color: #3C4370;
+    max-width: 620px;
+  }
+  .site-kicker {
+    font-size: 24px;
+    line-height: 1.25;
+    color: #10132A;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .site-hero-img,
+  .site-side-img {
+    width: 100%;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 28px 48px rgba(16,19,42,0.18));
+  }
+  .site-hero-img { max-height: 390px; }
+  .site-side-img { max-height: 300px; }
+  .site-image-stack {
+    display: grid;
+    gap: 12px;
+  }
+  .site-image-stack .site-side-img {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 14px;
+    padding: 11px;
+    max-height: 180px;
+  }
+  .site-focus-img {
+    width: 100%;
+    max-height: 500px;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 28px 48px rgba(16,19,42,0.18));
+  }
+  .site-btn {
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 0;
+    background: linear-gradient(135deg, #7703fc, #00C8FF);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(119,3,252,0.25);
+  }
+  .site-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+    margin-top: 20px;
+  }
+  .site-card {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 14px 15px;
+    box-shadow: 0 12px 30px rgba(16,19,42,0.06);
+  }
+  .site-card h3,
+  .site-feature h3,
+  .site-plan h3 {
+    color: #07080F;
+    font-size: 20px;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .site-card p,
+  .site-feature p,
+  .site-plan p,
+  .site-plan li {
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.34;
+  }
+  .site-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .site-feature {
+    background: #fff;
+    border: 1px solid rgba(119,3,252,0.12);
+    border-radius: 10px;
+    padding: 17px;
+  }
+  .site-feature .icon {
+    font-size: 26px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .site-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 16px;
+  }
+  .site-pill {
+    background: rgba(119,3,252,0.08);
+    border: 1px solid rgba(119,3,252,0.16);
+    border-radius: 999px;
+    color: #7703fc;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 12px;
+  }
+  .site-number-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 23px;
+  }
+  .site-number {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 15px 12px;
+    text-align: center;
+  }
+  .site-number .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: #7703fc;
+    line-height: 1;
+  }
+  .site-number .label {
+    color: #5A6080;
+    font-size: 16px;
+    line-height: 1.25;
+    margin-top: 6px;
+  }
+  .site-note {
+    color: #5A6080;
+    font-size: 20px;
+    line-height: 1.35;
+    margin-top: 16px;
+  }
+  .site-work {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .site-work-main {
+    background: #10132A;
+    color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 300px;
+  }
+  .site-work-main h2,
+  .site-work-main h3 { color: #fff !important; }
+  .site-work-main .site-lead { color: rgba(240,244,255,0.76); }
+  .site-work-main img {
+    width: 100%;
+    max-height: 130px;
+    margin-top: 18px;
+    object-fit: contain;
+  }
+  .site-process {
+    display: grid;
+    gap: 9px;
+  }
+  .site-process-item {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 13px 15px;
+  }
+  .site-process-item strong {
+    display: block;
+    color: #07080F;
+    font-size: 20px;
+    margin-bottom: 7px;
+  }
+  .site-process-item span {
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.28;
+  }
+  .site-plan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .site-plan {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 13px;
+  }
+  .site-plan .availability {
+    color: #7703fc;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .site-plan ul {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .site-plan li::before {
+    content: '✓';
+    color: #00A86B;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  .site-dense .site-inner { max-width: 1040px; }
+  .site-dense h2 { margin-bottom: 8px; }
+  .site-dense .site-lead { font-size: 22px; max-width: 880px; }
+  #s1.site-slide {
+    background:
+      radial-gradient(circle at 72% 48%, rgba(119,3,252,0.44) 0%, rgba(119,3,252,0.22) 25%, transparent 48%),
+      linear-gradient(135deg, #07080F 0%, #120525 48%, #07080F 100%) !important;
+  }
+  #s1.site-slide::before {
+    background: radial-gradient(circle, rgba(0,200,255,0.18) 0%, transparent 70%) !important;
+  }
+  #s1.site-slide::after {
+    background: radial-gradient(circle, rgba(119,3,252,0.18) 0%, transparent 70%) !important;
+  }
+  #s1.site-slide h1 {
+    color: #F0F4FF !important;
+    -webkit-text-fill-color: #F0F4FF;
+  }
+  #s1.site-slide .site-eyebrow { color: #A78BFA; }
+  #s1.site-slide .site-lead { color: rgba(240,244,255,0.78); }
+
+  /* ═══════════════════════════════════════════════════
+     CLEAN REBUILD — CONTENT SLIDES
+  ═══════════════════════════════════════════════════ */
+  .clean-slide {
+    background: #F6F7FC !important;
+    color: #07080F;
+    justify-content: center;
+    align-items: center;
+    padding: 86px 104px 96px;
+    text-align: left;
+  }
+  .clean-slide::before,
+  .clean-slide::after { display: none !important; }
+  .clean-dark {
+    background:
+      radial-gradient(circle at 74% 50%, rgba(119,3,252,0.48) 0%, rgba(119,3,252,0.23) 25%, transparent 48%),
+      linear-gradient(135deg, #07080F 0%, #140525 52%, #07080F 100%) !important;
+    color: #F0F4FF;
+  }
+  .clean-inner {
+    position: relative;
+    z-index: 1;
+    width: min(1120px, 100%);
+  }
+  .clean-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+    gap: 56px;
+    align-items: center;
+  }
+  .clean-split.reverse {
+    grid-template-columns: minmax(420px, 1.05fr) minmax(0, 0.95fr);
+  }
+  .clean-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7703fc;
+    margin-bottom: 18px;
+  }
+  .clean-dark .clean-eyebrow { color: #A78BFA; }
+  .clean-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5vw, 76px);
+    line-height: 0.96;
+    letter-spacing: 0.02em;
+    color: #07080F;
+    margin-bottom: 22px;
+  }
+  .clean-dark .clean-title { color: #F0F4FF; }
+  .clean-subtitle {
+    font-size: 24px;
+    line-height: 1.28;
+    font-weight: 700;
+    color: #10132A;
+    margin-bottom: 18px;
+  }
+  .clean-copy {
+    font-size: 20px;
+    line-height: 1.42;
+    color: #4C5275;
+  }
+  .clean-dark .clean-copy,
+  .clean-dark .clean-subtitle { color: rgba(240,244,255,0.78); }
+  .clean-media {
+    width: 100%;
+    max-height: 440px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 28px 48px rgba(16,19,42,0.18));
+  }
+  .clean-dark .clean-media {
+    max-height: 500px;
+    filter: drop-shadow(0 32px 54px rgba(0,0,0,0.45));
+  }
+  .clean-button {
+    margin-top: 30px;
+    display: inline-flex;
+    align-items: center;
+    border: 0;
+    background: linear-gradient(135deg, #7703fc, #00C8FF);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 16px 32px rgba(119,3,252,0.28);
+  }
+  .clean-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 28px;
+  }
+  .clean-card {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 18px 42px rgba(16,19,42,0.07);
+  }
+  .clean-card h3 {
+    font-size: 23px;
+    line-height: 1.2;
+    color: #07080F;
+    margin-bottom: 10px;
+  }
+  .clean-card p {
+    font-size: 18px;
+    line-height: 1.38;
+    color: #5A6080;
+  }
+  .clean-number-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 34px;
+  }
+  .clean-number {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 26px 18px;
+    text-align: center;
+  }
+  .clean-number .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 58px;
+    line-height: 1;
+    color: #7703fc;
+  }
+  .clean-number .label {
+    font-size: 17px;
+    line-height: 1.25;
+    color: #5A6080;
+    margin-top: 8px;
+  }
+  .clean-list {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .clean-list-item {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .clean-list-item strong {
+    display: block;
+    color: #07080F;
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 7px;
+  }
+  .clean-list-item span {
+    display: block;
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.34;
+  }
+  .clean-note {
+    margin-top: 18px;
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+  .global-slide .clean-split {
+    grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+  }
+  .global-slide .clean-title {
+    font-size: clamp(54px, 5.6vw, 86px);
+    margin-bottom: 26px;
+  }
+  .global-slide .clean-copy {
+    max-width: 560px;
+  }
+  .global-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .global-metrics .clean-number {
+    min-height: 168px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .global-metrics .clean-number .num {
+    font-size: 70px;
+  }
+  #s4.clean-slide,
+  #s6.clean-slide {
+    padding-top: 66px;
+    padding-bottom: 76px;
+  }
+  #s4 .clean-split,
+  #s6 .clean-split {
+    gap: 40px;
+  }
+  #s4 .clean-title,
+  #s6 .clean-title {
+    font-size: clamp(42px, 4.25vw, 64px);
+    margin-bottom: 16px;
+  }
+  #s4 .clean-copy {
+    font-size: 18px;
+    line-height: 1.34;
+  }
+  #s4 .clean-list,
+  #s6 .clean-list {
+    gap: 10px;
+    margin-top: 18px;
+  }
+  #s4 .clean-list-item,
+  #s6 .clean-list-item {
+    padding: 14px 17px;
+  }
+  #s4 .clean-list-item strong,
+  #s6 .clean-list-item strong {
+    font-size: 19px;
+    margin-bottom: 4px;
+  }
+  #s4 .clean-list-item span,
+  #s6 .clean-list-item span {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+  #s4 .clean-media,
+  #s6 .clean-media {
+    max-height: 350px;
+  }
+  #s8 .clean-media { max-height: 560px; }
 </style>
 </head>
 <body>
@@ -1354,7 +1899,7 @@
 </div>
 
 <!-- Slide counter -->
-<div class="counter"><span id="cur">01</span> / 10</div>
+<div class="counter"><span id="cur">01</span> / 09</div>
 
 <!-- Left arrow -->
 <div class="arrow left" id="prevBtn">
@@ -1370,86 +1915,152 @@
 <div class="nav" id="dots"></div>
 
 <!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 1 — COVER                                ║ -->
+<!-- ║  SLIDE 1 — HERO                                 ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide active" id="s1">
-  <div class="grid-overlay"></div>
-  <div class="content" style="display:flex;flex-direction:column;align-items:center;gap:0;">
-    <h1>YOUR STORE IS FULL<br>OF MONEY<br>YOU CAN'T SEE.</h1>
-    <button class="intro-btn" onclick="document.getElementById('nextBtn').click()">
-      Introducing Vitrac &nbsp;→
-    </button>
-  </div>
-</div>
-
-<!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 2 — THE PROBLEM                          ║ -->
-<!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s2">
-  <div class="inner">
-    <div class="tag">// The Problem</div>
-    <h2>YOUR STORE IS LOSING MONEY<br>AND YOU DON'T KNOW <em>WHY</em></h2>
-    <div class="pain-grid">
-      <div class="pain-card">
-        <div class="pain-icon">🚶</div>
-        <div>
-          <h3>Invisible Visitors</h3>
-          <p>You know how much you sell — but not how many people walked past without buying. That gap is pure lost revenue.</p>
-        </div>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">🗺️</div>
-        <div>
-          <h3>Dead Zones in Your Store</h3>
-          <p>Some shelves get zero attention. You're paying full rent for space that customers never visit.</p>
-        </div>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">🕐</div>
-        <div>
-          <h3>Wrong Staffing Hours</h3>
-          <p>Too many staff when it's quiet, not enough when it's busy. Both cost you money every single day.</p>
-        </div>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">🎲</div>
-        <div>
-          <h3>Decisions Based on Gut Feel</h3>
-          <p>Where to put promotions? When to run sales? Right now it's guesswork. It doesn't have to be.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 3 — WHAT IS VITRAC                       ║ -->
-<!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s3">
-  <div class="inner">
-    <div class="left">
-      <div class="tag">// The Solution</div>
-      <h2>MEET <em>VITRAC</em> — YOUR STORE'S SMARTEST EMPLOYEE</h2>
-      <p class="desc">
-        Vitrac connects to your store's cameras and silently watches everything — counting visitors, tracking movement, and spotting patterns — then translates all of it into simple, actionable insights you can act on today.
+<div class="slide active clean-slide clean-dark" id="s1">
+  <div class="clean-inner clean-split">
+    <div>
+      <div class="clean-eyebrow">Real-time analytics for retail stores</div>
+      <h1 class="clean-title">UNLOCK<br>THE FULL<br>POTENTIAL OF<br>EVERY STORE</h1>
+      <p class="clean-copy">
+        AI-powered cameras and smart analytics monitor store performance, support data-based decisions, and help increase sales by up to 20%.
       </p>
-      <div class="highlight-box">
-        💡 No new hardware needed in most cases. No tech skills required. Works 24 hours a day, 7 days a week — automatically.
+      <button class="clean-button" onclick="document.getElementById('nextBtn').click()">Explore Vitrac →</button>
+    </div>
+    <div>
+      <img class="clean-media" src="assets/Vitrac-hero-black.png" alt="Hero mockup">
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 2 — SALES CONVERSION                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s2">
+  <div class="clean-inner clean-split reverse">
+    <div>
+      <img class="clean-media" src="assets/main_pic.svg" alt="Sales conversion analytics">
+    </div>
+    <div>
+      <div class="clean-eyebrow">Sales Conversion</div>
+      <h2 class="clean-title">MEASURE VISITOR TRAFFIC TO IMPROVE CONVERSIONS</h2>
+      <p class="clean-subtitle">
+        Reduce the number of visitors who leave without making a purchase.
+      </p>
+      <p class="clean-copy">
+        TASS Vision gives offline retailers a clear sales funnel from store entrance to exit, with instant occupancy and conversion reporting powered by AI technology with a +98% accuracy rate.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 3 — RETAIL USE CASES                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s3">
+  <div class="clean-inner">
+    <div class="clean-eyebrow">Store performance analytics</div>
+    <h2 class="clean-title">THREE WAYS VITRAC TURNS TRAFFIC INTO ACTION</h2>
+    <div class="clean-grid">
+      <div class="clean-card">
+        <h3>Ad campaign effectiveness</h3>
+        <p>Target the right audiences and compare traffic before vs. after launch. Marketing teams can act on traffic and demographic data faster.</p>
+      </div>
+      <div class="clean-card">
+        <h3>Precise shelf planning</h3>
+        <p>Detect empty shelves, check price-tag presence, and verify planogram compliance to reveal lost sales and reduce stockouts.</p>
+      </div>
+      <div class="clean-card">
+        <h3>Heat map</h3>
+        <p>Optimize layout with heat zones and in-store journey maps. See which areas are active and which areas customers ignore.</p>
+      </div>
+      <div class="clean-card">
+        <h3>AI visitor analysis</h3>
+        <p>Analyze entrance traffic, visitor behavior, customer flow, and conversion drops with simple dashboards for daily decisions.</p>
       </div>
     </div>
-    <div class="right">
-      <div class="vitrac-visual">
-        <div class="camera-ring">
-          <div class="orbit-dot"></div>
-          <div class="orbit-dot"></div>
-          <div class="orbit-dot"></div>
-          <div class="camera-center">📷</div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 4 — HOW VITRAC WORKS                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s4">
+  <div class="clean-inner clean-split">
+    <div>
+      <div class="clean-eyebrow">How It Works</div>
+      <h2 class="clean-title">AI VISITOR ANALYSIS FOR RETAIL 5.0</h2>
+      <p class="clean-copy">
+        Vitrac analyzes entrance traffic and visitor behavior, reveals invisible losses, and turns every camera frame into data that grows sales and efficiency.
+      </p>
+      <div class="clean-list">
+        <div class="clean-list-item">
+          <strong>Find out who you’re losing</strong>
+          <span>See how many people entered, who they are, and where conversion drops.</span>
         </div>
-        <div class="data-tags">
-          <div class="data-tag">👥 247 visitors today</div>
-          <div class="data-tag">📊 62% conv. rate</div>
-          <div class="data-tag">🔥 Zone A: hottest</div>
-          <div class="data-tag">⏱️ Peak: 14:00–16:00</div>
+        <div class="clean-list-item">
+          <strong>Take control of traffic</strong>
+          <span>Use hourly and daily dynamics to improve staffing, VM, merchandising, and sales growth.</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <img class="clean-media" src="assets/1_en.svg" alt="AI visitor analysis">
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 5 — WHAT VITRAC DOES                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s5">
+  <div class="clean-inner">
+    <div class="clean-eyebrow">What Vitrac does</div>
+    <h2 class="clean-title">A CLEAR PICTURE OF CUSTOMER FLOW AND BEHAVIOR</h2>
+    <div class="clean-grid">
+      <div class="clean-card">
+        <h3>Visitor counting</h3>
+        <p>Tracks store entries while excluding staff and repeat visits, creating cleaner traffic data for real customers.</p>
+      </div>
+      <div class="clean-card">
+        <h3>Demographic analytics</h3>
+        <p>Identifies gender and age groups to help understand the audience and tailor store and marketing decisions.</p>
+      </div>
+      <div class="clean-card">
+        <h3>Group detection</h3>
+        <p>Recognizes families and groups for more accurate unique-visit metrics, not just raw headcount.</p>
+      </div>
+      <div class="clean-card">
+        <h3>Business impact</h3>
+        <p>Reduce walk-outs, increase conversion, optimize staffing, and prioritize actions that move revenue.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 6 — IMPLEMENTATION                       ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s6">
+  <div class="clean-inner clean-split reverse">
+    <div>
+      <img class="clean-media" src="assets/2_en.svg" alt="Vitrac implementation dashboard">
+    </div>
+    <div>
+      <div class="clean-eyebrow">Implementation and security</div>
+      <h2 class="clean-title">FAST DEPLOYMENT, SECURE DATA, CLEAR ROI</h2>
+      <div class="clean-list">
+        <div class="clean-list-item">
+          <strong>Accuracy and data</strong>
+          <span>Traffic counting accuracy up to 99%, with POS/ERP/DMS integration for honest entrance-to-purchase conversion.</span>
+        </div>
+        <div class="clean-list-item">
+          <strong>Installation</strong>
+          <span>Role-based web and mobile dashboards. Installation, testing, and onboarding take about one week.</span>
+        </div>
+        <div class="clean-list-item">
+          <strong>Security and ROI</strong>
+          <span>Encrypted data, EU servers, no standard facial recognition, and typical payback in 3–6 months.</span>
         </div>
       </div>
     </div>
@@ -1457,198 +2068,34 @@
 </div>
 
 <!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 4 — HOW IT WORKS                         ║ -->
+<!-- ║  SLIDE 7 — GLOBAL SCALE                         ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s4">
-  <div class="inner">
-    <div class="tag">// How It Works</div>
-    <h2>UP AND RUNNING IN 3 SIMPLE STEPS</h2>
-    <div class="steps-row">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-emoji">📡</div>
-        <h3>Connect</h3>
-        <p>We connect Vitrac to your existing security cameras. No new equipment, no construction, no downtime for your store.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-emoji">🤖</div>
-        <h3>Analyse</h3>
-        <p>Vitrac's AI watches your store continuously — counting every visitor, tracking movement, identifying your busiest hours and zones.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-emoji">📱</div>
-        <h3>Grow</h3>
-        <p>You receive clear, simple reports on your phone or computer. No spreadsheets, no tech skills — just straight answers.</p>
-      </div>
+<div class="slide clean-slide global-slide" id="s8">
+  <div class="clean-inner clean-split">
+    <div>
+      <div class="clean-eyebrow">Backed by global retail experience</div>
+      <h2 class="clean-title">GROW WITH A PROVEN RETAIL ANALYTICS PLATFORM</h2>
+      <p class="clean-copy">
+        TASS Vision brings proven retail analytics experience to growing stores and retail networks, helping teams measure performance, improve operations, and make decisions based on real customer behavior.
+      </p>
+      <p class="clean-note">A practical platform for retailers ready to connect store traffic, conversion, and operational performance.</p>
     </div>
-  </div>
-</div>
-
-<!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 5 — VISITOR COUNTING                     ║ -->
-<!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s5">
-  <div class="inner">
-    <div class="left">
-      <div class="tag">// Feature 01</div>
-      <h2>KNOW <em>EXACTLY</em> WHO COMES IN AND WHEN</h2>
-      <ul class="benefits">
-        <li>See how many people enter your store every hour, every day</li>
-        <li>Find your peak hours — staff smarter, sell more</li>
-        <li>Track your conversion rate: how many visitors actually buy</li>
-        <li>Compare this week vs. last week — spot trends instantly</li>
-        <li>Measure the real impact of promotions and window displays</li>
-      </ul>
-    </div>
-    <div class="right">
-      <div class="bar-chart">
-        <div class="bar-chart-label">Weekly Visitor Count — This Store</div>
-        <div class="bars">
-          <div class="bar-col">
-            <div class="bar-fill normal" style="height:55%"><span class="bar-num">184</span></div>
-            <div class="bar-day">Mon</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-fill normal" style="height:68%"><span class="bar-num">227</span></div>
-            <div class="bar-day">Tue</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-fill normal" style="height:62%"><span class="bar-num">206</span></div>
-            <div class="bar-day">Wed</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-fill normal" style="height:74%"><span class="bar-num">245</span></div>
-            <div class="bar-day">Thu</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-fill peak" style="height:100%"><span class="bar-num">332</span></div>
-            <div class="bar-day">Fri</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-fill peak" style="height:92%"><span class="bar-num">305</span></div>
-            <div class="bar-day">Sat</div>
-          </div>
-          <div class="bar-col">
-            <div class="bar-fill normal" style="height:40%"><span class="bar-num">132</span></div>
-            <div class="bar-day">Sun</div>
-          </div>
-        </div>
-        <div class="big-stat">
-          <div class="num">1,631</div>
-          <div class="label">Total visitors this week · +18% vs. last week</div>
-        </div>
+    <div class="global-metrics">
+      <div class="clean-number">
+        <div class="num">+3000</div>
+        <div class="label">Connected stores globally</div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 6 — HEAT MAPS                            ║ -->
-<!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s6">
-  <div class="inner">
-    <div class="right">
-      <div class="tag">// Feature 02</div>
-      <h2>SEE WHICH PARTS OF YOUR STORE<br>MAKE YOU <em>MONEY</em></h2>
-      <ul class="benefits">
-        <li>Visual heat map shows which zones customers love most</li>
-        <li>Identify dead zones where stock is invisible to shoppers</li>
-        <li>Move your best products to the hottest spots — instantly boost sales</li>
-        <li>Test store layouts and see the difference in real data</li>
-      </ul>
-      <div class="insight-box">
-        <strong>Real example:</strong> A store moved their new arrivals from a side wall to a hot zone identified by Vitrac — and saw a <strong>31% increase</strong> in sales of those items within two weeks. No extra budget. Just smarter placement.
+      <div class="clean-number">
+        <div class="num">+200</div>
+        <div class="label">Brands globally</div>
       </div>
-    </div>
-    <div class="left">
-      <div class="heatmap-visual">
-        <div class="heatmap-title">Store Floor Heat Map — Live View</div>
-        <div class="store-floor">
-          <div class="floor-grid"></div>
-          <div class="heat-zone hz1"></div>
-          <div class="heat-zone hz2"></div>
-          <div class="heat-zone hz3"></div>
-          <div class="heat-zone hz4"></div>
-          <div class="store-label l1">🔴 HOT — 68%</div>
-          <div class="store-label l2">🟠 WARM — 44%</div>
-          <div class="store-label l3">🟡 MILD — 28%</div>
-          <div class="store-label entrance">⬆ ENTRANCE</div>
-        </div>
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#ff3300"></div>Very High</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#ff7800"></div>High</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#ffdc00"></div>Medium</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#00c8ff"></div>Low</div>
-        </div>
+      <div class="clean-number">
+        <div class="num">5</div>
+        <div class="label">Years on market</div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 7 — REPORTS & DASHBOARD                  ║ -->
-<!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s7">
-  <div class="inner">
-    <div class="tag">// Feature 03</div>
-    <h2>YOUR STORE REPORT — <em>AUTOMATIC</em> &amp; SIMPLE</h2>
-    <div class="features-grid">
-      <div class="feature-card">
-        <span class="feat-icon">📅</span>
-        <h3>Daily Reports</h3>
-        <p>Every morning, see yesterday's full performance — visitor count, busiest hours, conversion rate — automatically delivered.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feat-icon">📈</span>
-        <h3>Trend Tracking</h3>
-        <p>Watch how your store improves week over week. See which changes worked and which didn't — in plain charts.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feat-icon">📱</span>
-        <h3>Access Anywhere</h3>
-        <p>Check your store's performance from your phone, tablet, or computer. At home, on the road — always in the picture.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feat-icon">🏪</span>
-        <h3>Multi-Store View</h3>
-        <p>Own more than one location? Compare all your stores in one dashboard and see which is performing best.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feat-icon">⚡</span>
-        <h3>Real-Time Alerts</h3>
-        <p>Get notified when your store is unusually busy or quiet — so you can react instantly and never miss a peak.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feat-icon">🔒</span>
-        <h3>Private &amp; Secure</h3>
-        <p>Vitrac analyses movement only — no faces stored, no personal data collected. Fully compliant and private.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ╔══════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 8 — TRUSTED BY                           ║ -->
-<!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s8">
-  <div class="inner">
-    <div class="tag">// Trusted By</div>
-    <h2>RETAILERS ACROSS THE REGION<br>ALREADY USE VITRAC</h2>
-    <p class="sub">From single boutiques to large retail chains — Vitrac is built for every physical store.</p>
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="num">500+</div>
-        <div class="label">Stores using Vitrac globally</div>
-      </div>
-      <div class="stat-box">
-        <div class="num">10M+</div>
-        <div class="label">Visitors counted per month</div>
-      </div>
-      <div class="stat-box">
-        <div class="num">15%</div>
-        <div class="label">Average revenue uplift within 3 months</div>
+      <div class="clean-number">
+        <div class="num">10</div>
+        <div class="label">Markets served globally</div>
       </div>
     </div>
   </div>
@@ -1780,8 +2227,8 @@
   let current = 0;
   let isAnimating = false;
 
-  // Slides 2–8 (index 1–7) are light-background slides
-  const lightSlides = new Set([1, 2, 3, 4, 5, 6, 7]);
+  // Slides 2–7 are light-background slides
+  const lightSlides = new Set([1, 2, 3, 4, 5, 6]);
 
   function applyTheme(idx) {
     document.body.classList.toggle('is-light', lightSlides.has(idx));
