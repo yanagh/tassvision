@@ -75,7 +75,7 @@
   /* ── Nav ─────────────────────────────────────────── */
   .nav {
     position: fixed;
-    bottom: 36px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -116,6 +116,7 @@
     transition: background 0.2s, border-color 0.2s;
     backdrop-filter: blur(10px);
   }
+  .arrow { display: none; }
   .arrow:hover { background: rgba(0,200,255,0.12); border-color: var(--blue); }
   .arrow svg { width: 20px; height: 20px; fill: none; stroke: var(--white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .arrow.left { left: 24px; }
@@ -1765,7 +1766,7 @@
   }
   .hero-main {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(40px, 4vw, 60px);
+    font-size: clamp(40px, 4.35vw, 62px);
     line-height: 0.98;
     letter-spacing: 0.02em;
     color: #F0F4FF;
@@ -1773,27 +1774,33 @@
   }
   .hero-support {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(24px, 2.25vw, 36px);
+    font-size: clamp(20px, 1.75vw, 28px);
     line-height: 1;
     letter-spacing: 0.02em;
     color: rgba(240,244,255,0.72);
     margin-bottom: 18px;
+    white-space: nowrap;
   }
   #s1.clean-slide {
-    padding: 118px 116px 92px;
+    padding: 112px 110px 86px;
+    text-align: left;
   }
   #s1 .clean-inner {
-    width: min(1160px, 100%);
-    margin-top: 8px;
+    width: min(1180px, 100%);
+    margin-top: 0;
   }
   #s1 .clean-split {
-    grid-template-columns: minmax(0, 1fr) minmax(420px, 1fr);
-    gap: 60px;
+    display: grid;
+    grid-template-columns: minmax(560px, 0.98fr) minmax(420px, 1.02fr);
+    gap: 72px;
+    align-items: center;
+    text-align: center;
   }
   #s1 .clean-copy {
-    font-size: 17px;
-    line-height: 1.38;
-    max-width: 500px;
+    font-size: 16px;
+    line-height: 1.42;
+    max-width: 600px;
+    margin: 0 auto;
   }
   #s1 .clean-button {
     margin-top: 24px;
@@ -1801,8 +1808,10 @@
     font-size: 15px;
   }
   #s1 .clean-media {
-    max-height: 430px;
+    display: block;
     width: 100%;
+    max-height: 360px;
+    object-fit: contain;
   }
   .clean-button {
     margin-top: 30px;
@@ -2154,7 +2163,9 @@
       <h1 class="hero-main">REAL-TIME ANALYTICS<br>FOR RETAIL STORES</h1>
       <div class="hero-support">Unlock the full potential of every store</div>
       <p class="clean-copy">
-        AI-powered cameras and smart analytics monitor store performance, support data-based decisions, and help increase sales by up to 20%.
+        AI-powered cameras and smart analytics monitor store performance,<br>
+        support data-based decisions, and help increase sales by up to 20%.<br>
+        Processed on-device for fast, secure, privacy-safe insights.
       </p>
       <button class="clean-button" onclick="document.getElementById('nextBtn').click()">Explore Vitrac →</button>
     </div>
