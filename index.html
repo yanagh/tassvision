@@ -141,10 +141,10 @@
     z-index: 100;
   }
   .logo-bar .tv-logo {
-    height: 22px;
+    height: 32px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.85;
+    filter: none;
+    opacity: 1;
   }
   .logo-bar .sep {
     width: 1px; height: 28px;
@@ -1341,7 +1341,7 @@
   body.is-light .counter { color: #8892B4; }
   body.is-light .counter span { color: var(--blue2); }
   body.is-light .logo-bar .sep { background: rgba(0,0,0,0.15); }
-  body.is-light .tv-logo { filter: brightness(0) !important; opacity: 0.75 !important; }
+  body.is-light .tv-logo { filter: none !important; opacity: 1 !important; }
 
   /* ═══════════════════════════════════════════════════
      WEBSITE COPY REFRESH — SLIDES 1–8 ONLY
@@ -1727,6 +1727,25 @@
     max-height: 500px;
     filter: drop-shadow(0 32px 54px rgba(0,0,0,0.45));
   }
+  .hero-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 6.2vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: #F0F4FF;
+    margin-bottom: 24px;
+  }
+  .hero-support {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(34px, 3.5vw, 54px);
+    line-height: 0.98;
+    letter-spacing: 0.02em;
+    color: rgba(240,244,255,0.72);
+    margin-bottom: 20px;
+  }
+  #s1 .clean-media {
+    max-height: 470px;
+  }
   .clean-button {
     margin-top: 30px;
     display: inline-flex;
@@ -1893,9 +1912,9 @@
 
 <!-- Logo bar -->
 <div class="logo-bar">
-  <img class="tv-logo" src="https://tassvision.ai/assets/logo/logo.svg" alt="TassVision">
-  <div class="sep"></div>
   <img class="pulsar-logo" src="pulsar-logo.png" alt="Pulsar">
+  <div class="sep"></div>
+  <img class="tv-logo" src="assets/tassvision_Logo_dark.svg" alt="TassVision">
 </div>
 
 <!-- Slide counter -->
@@ -1920,15 +1939,15 @@
 <div class="slide active clean-slide clean-dark" id="s1">
   <div class="clean-inner clean-split">
     <div>
-      <div class="clean-eyebrow">Real-time analytics for retail stores</div>
-      <h1 class="clean-title">UNLOCK<br>THE FULL<br>POTENTIAL OF<br>EVERY STORE</h1>
+      <h1 class="hero-main">REAL-TIME ANALYTICS<br>FOR RETAIL STORES</h1>
+      <div class="hero-support">UNLOCK<br>THE FULL<br>POTENTIAL OF<br>EVERY STORE</div>
       <p class="clean-copy">
         AI-powered cameras and smart analytics monitor store performance, support data-based decisions, and help increase sales by up to 20%.
       </p>
       <button class="clean-button" onclick="document.getElementById('nextBtn').click()">Explore Vitrac →</button>
     </div>
     <div>
-      <img class="clean-media" src="assets/Vitrac-hero-black.png" alt="Hero mockup">
+      <img class="clean-media" src="assets/main_pic.svg" alt="Sales conversion analytics">
     </div>
   </div>
 </div>
@@ -1939,7 +1958,7 @@
 <div class="slide clean-slide" id="s2">
   <div class="clean-inner clean-split reverse">
     <div>
-      <img class="clean-media" src="assets/main_pic.svg" alt="Sales conversion analytics">
+      <img class="clean-media" src="assets/Vitrac-hero-black.png" alt="Hero mockup">
     </div>
     <div>
       <div class="clean-eyebrow">Sales Conversion</div>
