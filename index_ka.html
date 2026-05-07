@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitrac — გაზარდეთ თქვენი მაღაზიის შემოსავალი</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+Condensed:wght@400;500;600;700;800;900&family=Noto+Sans+Georgian:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #07080F;
+    --ink2:   #10132A;
+    --blue:   #00C8FF;
+    --blue2:  #006EFF;
+    --orange: #FF5A1F;
+    --green:  #00E676;
+    --white:  #F0F4FF;
+    --muted:  #8892B4;
+    --card:   rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--ink);
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    color: var(--white);
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Deck ─────────────────────────────────────────── */
+  .deck {
+    width: 100vw; height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.55s cubic-bezier(.77,0,.18,1), transform 0.55s cubic-bezier(.77,0,.18,1);
+    will-change: transform, opacity;
+    overflow: hidden;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  /* ── Shared slide background shapes ──────────────── */
+  .slide::before, .slide::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Nav ─────────────────────────────────────────── */
+  .nav {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    background: rgba(7,8,15,0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 20px;
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s, width 0.3s;
+  }
+  .dot.active {
+    background: var(--blue);
+    transform: scale(1.3);
+    width: 22px;
+    border-radius: 4px;
+  }
+
+  .arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    backdrop-filter: blur(10px);
+  }
+  .arrow { display: none; }
+  .arrow:hover { background: rgba(0,200,255,0.12); border-color: var(--blue); }
+  .arrow svg { width: 20px; height: 20px; fill: none; stroke: var(--white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow.left { left: 24px; }
+  .arrow.right { right: 24px; }
+
+  /* slide counter */
+  .counter {
+    position: fixed;
+    top: 24px; right: 36px;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    z-index: 100;
+  }
+  .counter span { color: var(--blue); }
+
+  /* ── Logos bar ───────────────────────────────────── */
+  .logo-bar {
+    position: fixed;
+    top: 20px; left: 30px;
+    display: flex; align-items: center; gap: 10px;
+    z-index: 100;
+    background: rgba(7,8,15,0.72);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 6px 11px;
+    backdrop-filter: blur(12px);
+  }
+  .logo-bar .tv-logo {
+    height: 22px;
+    object-fit: contain;
+    filter: none;
+    opacity: 1;
+  }
+  .logo-bar .sep {
+    width: 1px; height: 22px;
+    background: rgba(255,255,255,0.2);
+  }
+  .logo-bar .pulsar-logo {
+    height: 27px;
+    object-fit: contain;
+    filter: none;
+    opacity: 1;
+  }
+  /* On white-bg slides invert the TassVision logo */
+  .slide.light-bg ~ * .logo-bar .tv-logo { filter: brightness(0); opacity: 0.7; }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 1 — COVER  (25% more compact)
+  ═══════════════════════════════════════════════════ */
+  #s1 {
+    background: var(--ink);
+    text-align: center;
+  }
+  #s1::before {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,200,255,0.15) 0%, transparent 70%);
+    top: -150px; right: -150px;
+  }
+  #s1::after {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(255,90,31,0.1) 0%, transparent 70%);
+    bottom: -100px; left: -80px;
+  }
+  #s1 .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 0;
+  }
+  #s1 .content { position: relative; z-index: 1; }
+  #s1 .eyebrow {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  #s1 .eyebrow::before, #s1 .eyebrow::after {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--blue);
+    opacity: 0.6;
+  }
+  #s1 h1 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(54px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    background: linear-gradient(135deg, #fff 30%, var(--blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 18px;
+  }
+  #s1 .sub {
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 300;
+    color: rgba(240,244,255,0.7);
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+  #s1 .cta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 11px 24px;
+    border-radius: 100px;
+    box-shadow: 0 0 30px rgba(0,200,255,0.3);
+  }
+  #s1 .vitrac-hero-logo {
+    width: 120px;
+    margin-bottom: 20px;
+    filter: brightness(0) invert(1);
+  }
+  .intro-btn {
+    margin-top: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.35);
+    color: var(--white);
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 14px 36px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s, color 0.25s;
+  }
+  .intro-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.7);
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+  ═══════════════════════════════════════════════════ */
+  #s2 {
+    background: #0D0E1C;
+  }
+  #s2::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,90,31,0.12) 0%, transparent 70%);
+    top: -200px; left: -100px;
+  }
+  #s2 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s2 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s2 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(52px, 6.5vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 52px;
+    max-width: 800px;
+  }
+  #s2 h2 em { color: var(--orange); font-style: normal; }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .pain-card {
+    background: rgba(255,90,31,0.06);
+    border: 1px solid rgba(255,90,31,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .pain-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: rgba(255,90,31,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+  .pain-card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+  .pain-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 3 — WHAT IS VITRAC
+  ═══════════════════════════════════════════════════ */
+  #s3 {
+    background: linear-gradient(135deg, #050917 0%, #0A1540 100%);
+  }
+  #s3::before {
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(0,200,255,0.08) 0%, transparent 65%);
+    top: -300px; right: -300px;
+  }
+  #s3 .inner {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%; max-width: 1200px;
+  }
+  #s3 .left .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--blue); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s3 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(52px, 6vw, 88px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+  #s3 h2 em { color: var(--blue); font-style: normal; }
+  #s3 .desc {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(240,244,255,0.75);
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+  #s3 .highlight-box {
+    background: linear-gradient(135deg, rgba(0,200,255,0.1), rgba(0,110,255,0.1));
+    border: 1px solid rgba(0,200,255,0.25);
+    border-radius: 16px;
+    padding: 22px 26px;
+    font-size: 15px;
+    color: var(--blue);
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .vitrac-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .camera-ring {
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,200,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    animation: rotate 20s linear infinite;
+  }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+  .camera-ring::before {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,200,255,0.15);
+  }
+  .camera-center {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,200,255,0.15), rgba(0,110,255,0.05));
+    border: 2px solid rgba(0,200,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+    animation: rotate 20s linear infinite reverse;
+    box-shadow: 0 0 60px rgba(0,200,255,0.15), inset 0 0 30px rgba(0,200,255,0.05);
+  }
+  .orbit-dot {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 20px var(--blue);
+    top: -6px; left: 50%;
+    transform: translateX(-50%);
+  }
+  .orbit-dot:nth-child(2) { top: auto; bottom: -6px; background: var(--orange); box-shadow: 0 0 20px var(--orange); }
+  .orbit-dot:nth-child(3) { top: 50%; left: -6px; transform: translateY(-50%); background: var(--green); box-shadow: 0 0 20px var(--green); }
+  .data-tags {
+    position: absolute;
+    right: -40px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .data-tag {
+    background: rgba(0,200,255,0.08);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 11px;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 4 — HOW IT WORKS
+  ═══════════════════════════════════════════════════ */
+  #s4 {
+    background: var(--ink);
+    text-align: center;
+  }
+  #s4::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,230,118,0.08) 0%, transparent 70%);
+    bottom: -200px; right: -200px;
+  }
+  #s4 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s4 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s4 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(50px, 6vw, 84px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 60px;
+  }
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .steps-row::before {
+    content: '';
+    position: absolute;
+    top: 44px; left: calc(16.67% + 20px);
+    width: calc(66.66% - 40px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    z-index: 0;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .step-num {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+  .step:nth-child(1) .step-num { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: var(--ink); box-shadow: 0 0 40px rgba(0,200,255,0.3); }
+  .step:nth-child(2) .step-num { background: linear-gradient(135deg, #7B3FF2, var(--blue2)); color: var(--white); box-shadow: 0 0 40px rgba(123,63,242,0.3); }
+  .step:nth-child(3) .step-num { background: linear-gradient(135deg, var(--green), #00A86B); color: var(--ink); box-shadow: 0 0 40px rgba(0,230,118,0.3); }
+  .step-emoji { font-size: 30px; }
+  .step h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .step p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 5 — VISITOR COUNTING
+  ═══════════════════════════════════════════════════ */
+  #s5 {
+    background: #080B1A;
+  }
+  #s5::before {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,110,255,0.12) 0%, transparent 65%);
+    top: -200px; left: -200px;
+  }
+  #s5 .inner {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%; max-width: 1200px;
+  }
+  #s5 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--blue); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s5 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(48px, 5.5vw, 82px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+  #s5 h2 em { color: var(--blue); font-style: normal; }
+  #s5 .benefits {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #s5 .benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    color: rgba(240,244,255,0.8);
+    line-height: 1.5;
+  }
+  #s5 .benefits li::before {
+    content: '→';
+    color: var(--blue);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Bar chart visual */
+  .bar-chart {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-chart-label {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 160px;
+  }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .bar-fill {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.8s ease;
+    position: relative;
+    min-height: 4px;
+  }
+  .bar-fill.peak { background: linear-gradient(180deg, var(--blue), var(--blue2)); box-shadow: 0 -4px 20px rgba(0,200,255,0.3); }
+  .bar-fill.normal { background: rgba(0,200,255,0.35); }
+  .bar-day {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .bar-num {
+    position: absolute;
+    top: -22px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 10px;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+  .big-stat {
+    margin-top: 24px;
+    text-align: center;
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(0,200,255,0.06);
+    border: 1px solid rgba(0,200,255,0.15);
+  }
+  .big-stat .num {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 52px;
+    color: var(--blue);
+    line-height: 1;
+  }
+  .big-stat .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 6 — HEAT MAPS
+  ═══════════════════════════════════════════════════ */
+  #s6 {
+    background: #0B0A14;
+  }
+  #s6::before {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,90,31,0.1) 0%, transparent 65%);
+    bottom: -200px; right: -200px;
+  }
+  #s6 .inner {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%; max-width: 1200px;
+  }
+  #s6 .right { order: -1; }
+  #s6 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--orange); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s6 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(48px, 5.5vw, 82px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+  #s6 h2 em { color: var(--orange); font-style: normal; }
+  #s6 .benefits {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  #s6 .benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    color: rgba(240,244,255,0.8);
+    line-height: 1.5;
+  }
+  #s6 .benefits li::before {
+    content: '→';
+    color: var(--orange);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  #s6 .insight-box {
+    background: rgba(255,90,31,0.08);
+    border: 1px solid rgba(255,90,31,0.2);
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 14px;
+    color: rgba(240,244,255,0.8);
+    line-height: 1.6;
+  }
+  #s6 .insight-box strong { color: var(--orange); }
+
+  /* Store heatmap visual */
+  .heatmap-visual {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+  }
+  .heatmap-title {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .store-floor {
+    width: 100%;
+    aspect-ratio: 4/3;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .heat-zone {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(30px);
+  }
+  .hz1 { width: 180px; height: 180px; background: rgba(255,0,0,0.45); top: 10%; left: 10%; }
+  .hz2 { width: 140px; height: 140px; background: rgba(255,120,0,0.4); top: 40%; right: 15%; }
+  .hz3 { width: 100px; height: 100px; background: rgba(255,220,0,0.3); bottom: 15%; left: 35%; }
+  .hz4 { width: 80px; height: 80px; background: rgba(0,200,255,0.25); bottom: 20%; right: 30%; }
+  .floor-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  .store-label {
+    position: absolute;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 9px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.05em;
+  }
+  .store-label.entrance { bottom: 6px; left: 50%; transform: translateX(-50%); }
+  .store-label.l1 { top: 12%; left: 8%; color: rgba(255,100,100,0.8); }
+  .store-label.l2 { top: 42%; right: 10%; color: rgba(255,160,50,0.8); }
+  .store-label.l3 { bottom: 18%; left: 30%; color: rgba(255,220,0,0.7); }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 7 — REPORTS & DASHBOARD
+  ═══════════════════════════════════════════════════ */
+  #s7 {
+    background: #060D1A;
+    text-align: center;
+  }
+  #s7::before {
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(0,230,118,0.07) 0%, transparent 65%);
+    top: -300px; right: -300px;
+  }
+  #s7 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s7 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s7 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(50px, 6vw, 86px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 48px;
+  }
+  #s7 h2 em { color: var(--green); font-style: normal; }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: left;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover { border-color: rgba(0,230,118,0.3); background: rgba(0,230,118,0.05); }
+  .feature-card:hover::before { opacity: 1; }
+  .feat-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .feature-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 8 — TRUSTED BY
+  ═══════════════════════════════════════════════════ */
+  #s8 {
+    background: #070811;
+    text-align: center;
+  }
+  #s8::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 65%);
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+  }
+  #s8 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1000px;
+  }
+  #s8 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--blue); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s8 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(48px, 5.5vw, 80px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+  }
+  #s8 .sub {
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 52px;
+    font-weight: 300;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 52px;
+  }
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 24px;
+  }
+  .stat-box .num {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-box .label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 400;
+  }
+  .brands-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    opacity: 0.5;
+    filter: grayscale(1) brightness(2);
+  }
+  .brands-strip img {
+    height: 28px;
+    object-fit: contain;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 9 — PRICING
+  ═══════════════════════════════════════════════════ */
+  #s9 {
+    background: #080C18;
+    text-align: center;
+  }
+  #s9::before {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(123,63,242,0.1) 0%, transparent 65%);
+    bottom: -200px; left: -200px;
+  }
+  #s9 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 1100px;
+  }
+  #s9 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: #A78BFA; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  #s9 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(48px, 5.5vw, 80px);
+    line-height: 0.93;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+  }
+
+  /* Billing toggle */
+  .billing-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 8px;
+    margin-bottom: 36px;
+    cursor: pointer;
+  }
+  .toggle-btn {
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    color: var(--muted);
+  }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #7B3FF2, var(--blue2));
+    color: var(--white);
+    box-shadow: 0 4px 20px rgba(123,63,242,0.3);
+  }
+  .save-badge {
+    font-size: 11px;
+    background: rgba(0,230,118,0.15);
+    color: var(--green);
+    border: 1px solid rgba(0,230,118,0.3);
+    border-radius: 100px;
+    padding: 3px 10px;
+    font-weight: 600;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .plan-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 20px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+    text-align: left;
+    overflow: hidden;
+  }
+  .plan-card.popular {
+    border-color: rgba(0,200,255,0.4);
+    background: rgba(0,200,255,0.05);
+    transform: translateY(-8px);
+  }
+  .popular-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .plan-name {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    color: var(--white);
+  }
+  .plan-card.popular .plan-name { color: var(--blue); }
+  .plan-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+  .plan-price {
+    margin-bottom: 6px;
+  }
+  .plan-amount {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--white);
+  }
+  .plan-currency {
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+  .plan-period {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .plan-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(240,244,255,0.7);
+  }
+  .plan-features li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 10 — CTA
+  ═══════════════════════════════════════════════════ */
+  #s10 {
+    background: var(--ink);
+    text-align: center;
+    overflow: hidden;
+  }
+  #s10 .bg-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(0,200,255,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 50%, rgba(255,90,31,0.08) 0%, transparent 50%);
+  }
+  #s10 .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  #s10 .inner {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 800px;
+  }
+  #s10 .tag {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  #s10 .tag::before, #s10 .tag::after {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--green);
+    opacity: 0.5;
+  }
+  #s10 h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(52px, 7vw, 104px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 30%, var(--blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #s10 .sub {
+    font-size: 18px;
+    color: rgba(240,244,255,0.6);
+    margin-bottom: 52px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .contact-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 24px;
+    padding: 40px 48px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green), var(--blue));
+  }
+  .contact-company {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 42px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .contact-id {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    letter-spacing: 0.05em;
+  }
+  .contact-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: var(--ink);
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.08em;
+    padding: 16px 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,200,255,0.3);
+  }
+  .contact-phone .phone-icon { font-size: 24px; }
+  #s1 .hero-main,
+  #s1 .hero-support,
+  .clean-title,
+  .package-head .clean-title,
+  #s9 h2,
+  .plan-name,
+  #s10.simple-cta h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+  #s10.simple-cta .inner {
+    max-width: 900px;
+  }
+  #s10.simple-cta h2 {
+    font-size: clamp(66px, 8vw, 118px);
+    margin-bottom: 38px;
+  }
+  #s10.simple-cta .simple-phone {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(52px, 6vw, 88px);
+    line-height: 1;
+    color: var(--blue);
+    letter-spacing: 0.04em;
+  }
+  #s10.simple-cta .simple-company {
+    margin-top: 26px;
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(240,244,255,0.86);
+  }
+  #s10.simple-cta .simple-id {
+    margin-top: 8px;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .pulsar-logo-big {
+    height: 44px;
+    object-fit: contain;
+    margin-bottom: 16px;
+  }
+
+  /* ── Animations ───────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 40px rgba(0,200,255,0.3); }
+    50%       { box-shadow: 0 0 70px rgba(0,200,255,0.6); }
+  }
+  .slide.active > * {
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .slide.active > *:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active > *:nth-child(3) { animation-delay: 0.2s; }
+
+  /* ── Responsive ───────────────────────────────── */
+  @media (max-width: 900px) {
+    .slide { padding: 40px 32px; }
+    #s3 .inner, #s5 .inner, #s6 .inner { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-row { grid-template-columns: 1fr; gap: 32px; }
+    .steps-row::before { display: none; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr; gap: 16px; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ═══════════════════════════════════════════════════
+     LIGHT SLIDE OVERRIDES  (slides 2 – 8)
+  ═══════════════════════════════════════════════════ */
+
+  /* S2 — Problem: clean white + orange */
+  #s2 { background: #ffffff; }
+  #s2 h2 { color: #07080F; }
+  #s2 .tag { color: var(--orange); }
+  .pain-card { background: #fff5f1; border-color: rgba(255,90,31,0.18); }
+  .pain-icon { background: rgba(255,90,31,0.10); }
+  .pain-card h3 { color: #07080F; }
+  .pain-card p  { color: #5A6080; }
+  #s2::before { background: radial-gradient(circle, rgba(255,90,31,0.07) 0%, transparent 70%); }
+
+  /* S3 — What is Vitrac: pale blue-white */
+  #s3 { background: #F4F8FF; }
+  #s3::before { background: radial-gradient(circle, rgba(0,110,255,0.06) 0%, transparent 65%); }
+  #s3 h2 { color: #07080F; }
+  #s3 h2 em { color: var(--blue2); }
+  #s3 .desc { color: #3C4370; }
+  #s3 .highlight-box {
+    background: rgba(0,110,255,0.06);
+    border-color: rgba(0,110,255,0.2);
+    color: var(--blue2);
+  }
+  .camera-ring { border-color: rgba(0,110,255,0.25); }
+  .camera-ring::before { border-color: rgba(0,110,255,0.12); }
+  .camera-center {
+    background: radial-gradient(circle, rgba(0,110,255,0.12), rgba(0,110,255,0.03));
+    border-color: rgba(0,110,255,0.3);
+    box-shadow: 0 0 50px rgba(0,110,255,0.12);
+  }
+  .data-tag { background: rgba(0,110,255,0.06); border-color: rgba(0,110,255,0.18); color: var(--blue2); }
+
+  /* S4 — How it works: bright white */
+  #s4 { background: #ffffff; }
+  #s4::before { background: radial-gradient(circle, rgba(0,180,100,0.06) 0%, transparent 70%); }
+  #s4 h2 { color: #07080F; }
+  #s4 .tag { color: #00A86B; }
+  .step h3 { color: #07080F; }
+  .step p  { color: #5A6080; }
+  .steps-row::before { background: linear-gradient(90deg, var(--blue2), #00A86B); opacity: 0.5; }
+
+  /* S5 — Visitor counting: white */
+  #s5 { background: #ffffff; }
+  #s5::before { background: radial-gradient(circle, rgba(0,110,255,0.07) 0%, transparent 65%); }
+  #s5 h2 { color: #07080F; }
+  #s5 h2 em { color: var(--blue2); }
+  #s5 .tag { color: var(--blue2); }
+  #s5 .benefits li { color: #3C4370; }
+  #s5 .benefits li::before { color: var(--blue2); }
+  .bar-chart { background: #F4F8FF; border-color: rgba(0,110,255,0.12); }
+  .bar-chart-label { color: #8892B4; }
+  .bar-fill.normal { background: rgba(0,110,255,0.25); }
+  .bar-fill.peak   { background: linear-gradient(180deg, var(--blue2), #0040CC); box-shadow: 0 -4px 18px rgba(0,110,255,0.25); }
+  .bar-day  { color: #8892B4; }
+  .bar-num  { color: var(--blue2); }
+  .big-stat { background: rgba(0,110,255,0.06); border-color: rgba(0,110,255,0.15); }
+  .big-stat .num   { color: var(--blue2); }
+  .big-stat .label { color: #5A6080; }
+
+  /* S6 — Heat maps: warm cream */
+  #s6 { background: #FFF7F4; }
+  #s6::before { background: radial-gradient(circle, rgba(255,90,31,0.07) 0%, transparent 65%); }
+  #s6 h2 { color: #07080F; }
+  #s6 h2 em { color: var(--orange); }
+  #s6 .tag { color: var(--orange); }
+  #s6 .benefits li { color: #3C4370; }
+  #s6 .benefits li::before { color: var(--orange); }
+  #s6 .insight-box { background: rgba(255,90,31,0.06); border-color: rgba(255,90,31,0.18); color: #3C4370; }
+  #s6 .insight-box strong { color: var(--orange); }
+  .heatmap-visual { background: #fff; border-color: rgba(0,0,0,0.08); }
+  .heatmap-title  { color: #8892B4; }
+  .store-floor    { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06); }
+  .floor-grid     { background-image: linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px), linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px); }
+  .store-label    { color: rgba(0,0,0,0.4); }
+  .store-label.l1 { color: rgba(200,40,40,0.8); }
+  .store-label.l2 { color: rgba(200,100,20,0.8); }
+  .store-label.l3 { color: rgba(160,140,0,0.8); }
+  .legend-item    { color: #8892B4; }
+
+  /* S7 — Reports: fresh white-green */
+  #s7 { background: #F4FBF7; }
+  #s7::before { background: radial-gradient(circle, rgba(0,180,100,0.06) 0%, transparent 65%); }
+  #s7 h2 { color: #07080F; }
+  #s7 h2 em { color: #00A86B; }
+  #s7 .tag { color: #00A86B; }
+  .feature-card { background: #ffffff; border-color: rgba(0,0,0,0.07); }
+  .feature-card::before { background: linear-gradient(90deg,transparent,#00A86B,transparent); }
+  .feature-card:hover { border-color: rgba(0,168,107,0.3); background: rgba(0,168,107,0.04); }
+  .feature-card h3 { color: #07080F; }
+  .feature-card p  { color: #5A6080; }
+
+  /* S8 — Trusted by: soft lavender-white */
+  #s8 { background: #F2F5FF; }
+  #s8::before { background: radial-gradient(circle, rgba(0,110,255,0.06) 0%, transparent 65%); }
+  #s8 h2  { color: #07080F; }
+  #s8 .sub { color: #5A6080; }
+  #s8 .tag { color: var(--blue2); }
+  .stat-box { background: #ffffff; border-color: rgba(0,0,0,0.07); }
+  .stat-box .label { color: #5A6080; }
+  .brands-strip { opacity: 0.45; filter: grayscale(1) brightness(0.2); }
+
+  /* Nav adapts on light slides */
+  body.is-light .nav {
+    background: rgba(255,255,255,0.85);
+    border-color: rgba(0,0,0,0.1);
+  }
+  body.is-light .dot { background: #c0c8e0; }
+  body.is-light .dot.active { background: var(--blue2); }
+  body.is-light .arrow {
+    background: rgba(255,255,255,0.8);
+    border-color: rgba(0,0,0,0.1);
+  }
+  body.is-light .arrow svg { stroke: #07080F; }
+  body.is-light .arrow:hover { background: rgba(0,110,255,0.1); border-color: var(--blue2); }
+  body.is-light .counter { color: #8892B4; }
+  body.is-light .counter span { color: var(--blue2); }
+  body.is-light .logo-bar {
+    background: rgba(7,8,15,0.82);
+    border-color: rgba(255,255,255,0.14);
+  }
+  body.is-light .logo-bar .sep { background: rgba(255,255,255,0.22); }
+  body.is-light .tv-logo { filter: none !important; opacity: 1 !important; }
+
+  /* ═══════════════════════════════════════════════════
+     WEBSITE COPY REFRESH — SLIDES 1–8 ONLY
+  ═══════════════════════════════════════════════════ */
+  .site-slide {
+    background: #f7f8fc !important;
+    color: #07080F;
+    text-align: left;
+    padding: 48px 70px;
+  }
+  .site-slide::before {
+    width: 760px; height: 760px;
+    background: radial-gradient(circle, rgba(119,3,252,0.10) 0%, transparent 68%) !important;
+    top: -280px; right: -260px;
+  }
+  .site-slide::after {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(0,200,255,0.10) 0%, transparent 70%) !important;
+    bottom: -220px; left: -160px;
+  }
+  .site-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1080px;
+  }
+  .site-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+    gap: 38px;
+    align-items: center;
+  }
+  .site-eyebrow {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7703fc;
+    margin-bottom: 11px;
+  }
+  .site-slide h1,
+  .site-slide h2 {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    color: #07080F !important;
+    -webkit-text-fill-color: currentColor;
+    background: none;
+    line-height: 0.94;
+    letter-spacing: 0.02em;
+  }
+  .site-slide h1 {
+    font-size: clamp(42px, 4.9vw, 72px);
+    margin-bottom: 15px;
+  }
+  .site-slide h2 {
+    font-size: clamp(34px, 4vw, 58px);
+    margin-bottom: 14px;
+  }
+  .site-slide h2 em,
+  .site-slide h1 em {
+    color: #7703fc;
+    font-style: normal;
+  }
+  .site-lead {
+    font-size: 22px;
+    line-height: 1.36;
+    color: #3C4370;
+    max-width: 620px;
+  }
+  .site-kicker {
+    font-size: 24px;
+    line-height: 1.25;
+    color: #10132A;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .site-hero-img,
+  .site-side-img {
+    width: 100%;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 28px 48px rgba(16,19,42,0.18));
+  }
+  .site-hero-img { max-height: 390px; }
+  .site-side-img { max-height: 300px; }
+  .site-image-stack {
+    display: grid;
+    gap: 12px;
+  }
+  .site-image-stack .site-side-img {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 14px;
+    padding: 11px;
+    max-height: 180px;
+  }
+  .site-focus-img {
+    width: 100%;
+    max-height: 500px;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 28px 48px rgba(16,19,42,0.18));
+  }
+  .site-btn {
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 0;
+    background: linear-gradient(135deg, #7703fc, #00C8FF);
+    color: #fff;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(119,3,252,0.25);
+  }
+  .site-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+    margin-top: 20px;
+  }
+  .site-card {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 14px 15px;
+    box-shadow: 0 12px 30px rgba(16,19,42,0.06);
+  }
+  .site-card h3,
+  .site-feature h3,
+  .site-plan h3 {
+    color: #07080F;
+    font-size: 20px;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .site-card p,
+  .site-feature p,
+  .site-plan p,
+  .site-plan li {
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.34;
+  }
+  .site-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .site-feature {
+    background: #fff;
+    border: 1px solid rgba(119,3,252,0.12);
+    border-radius: 10px;
+    padding: 17px;
+  }
+  .site-feature .icon {
+    font-size: 26px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .site-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 16px;
+  }
+  .site-pill {
+    background: rgba(119,3,252,0.08);
+    border: 1px solid rgba(119,3,252,0.16);
+    border-radius: 999px;
+    color: #7703fc;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 12px;
+  }
+  .site-number-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 23px;
+  }
+  .site-number {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 15px 12px;
+    text-align: center;
+  }
+  .site-number .num {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 40px;
+    color: #7703fc;
+    line-height: 1;
+  }
+  .site-number .label {
+    color: #5A6080;
+    font-size: 16px;
+    line-height: 1.25;
+    margin-top: 6px;
+  }
+  .site-note {
+    color: #5A6080;
+    font-size: 20px;
+    line-height: 1.35;
+    margin-top: 16px;
+  }
+  .site-work {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .site-work-main {
+    background: #10132A;
+    color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 300px;
+  }
+  .site-work-main h2,
+  .site-work-main h3 { color: #fff !important; }
+  .site-work-main .site-lead { color: rgba(240,244,255,0.76); }
+  .site-work-main img {
+    width: 100%;
+    max-height: 130px;
+    margin-top: 18px;
+    object-fit: contain;
+  }
+  .site-process {
+    display: grid;
+    gap: 9px;
+  }
+  .site-process-item {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 13px 15px;
+  }
+  .site-process-item strong {
+    display: block;
+    color: #07080F;
+    font-size: 20px;
+    margin-bottom: 7px;
+  }
+  .site-process-item span {
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.28;
+  }
+  .site-plan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .site-plan {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 10px;
+    padding: 13px;
+  }
+  .site-plan .availability {
+    color: #7703fc;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .site-plan ul {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .site-plan li::before {
+    content: '✓';
+    color: #00A86B;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  .site-dense .site-inner { max-width: 1040px; }
+  .site-dense h2 { margin-bottom: 8px; }
+  .site-dense .site-lead { font-size: 22px; max-width: 880px; }
+  #s1.site-slide {
+    background:
+      radial-gradient(circle at 72% 48%, rgba(119,3,252,0.44) 0%, rgba(119,3,252,0.22) 25%, transparent 48%),
+      linear-gradient(135deg, #07080F 0%, #120525 48%, #07080F 100%) !important;
+  }
+  #s1.site-slide::before {
+    background: radial-gradient(circle, rgba(0,200,255,0.18) 0%, transparent 70%) !important;
+  }
+  #s1.site-slide::after {
+    background: radial-gradient(circle, rgba(119,3,252,0.18) 0%, transparent 70%) !important;
+  }
+  #s1.site-slide h1 {
+    color: #F0F4FF !important;
+    -webkit-text-fill-color: #F0F4FF;
+  }
+  #s1.site-slide .site-eyebrow { color: #A78BFA; }
+  #s1.site-slide .site-lead { color: rgba(240,244,255,0.78); }
+
+  /* ═══════════════════════════════════════════════════
+     CLEAN REBUILD — CONTENT SLIDES
+  ═══════════════════════════════════════════════════ */
+  .clean-slide {
+    background: #F6F7FC !important;
+    color: #07080F;
+    justify-content: center;
+    align-items: center;
+    padding: 86px 104px 96px;
+    text-align: left;
+  }
+  .clean-slide::before,
+  .clean-slide::after { display: none !important; }
+  .clean-dark {
+    background:
+      radial-gradient(circle at 74% 50%, rgba(119,3,252,0.48) 0%, rgba(119,3,252,0.23) 25%, transparent 48%),
+      linear-gradient(135deg, #07080F 0%, #140525 52%, #07080F 100%) !important;
+    color: #F0F4FF;
+  }
+  .clean-inner {
+    position: relative;
+    z-index: 1;
+    width: min(1120px, 100%);
+  }
+  .clean-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+    gap: 56px;
+    align-items: center;
+  }
+  .clean-split.reverse {
+    grid-template-columns: minmax(420px, 1.05fr) minmax(0, 0.95fr);
+  }
+  .clean-eyebrow {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7703fc;
+    margin-bottom: 18px;
+  }
+  .clean-dark .clean-eyebrow { color: #A78BFA; }
+  .clean-title {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(48px, 5vw, 76px);
+    line-height: 0.96;
+    letter-spacing: 0.02em;
+    color: #07080F;
+    margin-bottom: 22px;
+  }
+  .clean-dark .clean-title { color: #F0F4FF; }
+  .clean-subtitle {
+    font-size: 24px;
+    line-height: 1.28;
+    font-weight: 700;
+    color: #10132A;
+    margin-bottom: 18px;
+  }
+  .clean-copy {
+    font-size: 20px;
+    line-height: 1.42;
+    color: #4C5275;
+  }
+  .clean-dark .clean-copy,
+  .clean-dark .clean-subtitle { color: rgba(240,244,255,0.78); }
+  .clean-media {
+    width: 100%;
+    max-height: 440px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 28px 48px rgba(16,19,42,0.18));
+  }
+  .clean-dark .clean-media {
+    max-height: 500px;
+    filter: drop-shadow(0 32px 54px rgba(0,0,0,0.45));
+  }
+  .hero-main {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(40px, 4.35vw, 62px);
+    line-height: 0.98;
+    letter-spacing: 0.02em;
+    color: #F0F4FF;
+    margin-bottom: 22px;
+  }
+  .hero-support {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: clamp(20px, 1.75vw, 28px);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: rgba(240,244,255,0.72);
+    margin-bottom: 18px;
+    white-space: nowrap;
+  }
+  #s1.clean-slide {
+    padding: 112px 110px 86px;
+    text-align: left;
+  }
+  #s1 .clean-inner {
+    width: min(1180px, 100%);
+    margin-top: 0;
+  }
+  #s1 .clean-split {
+    display: grid;
+    grid-template-columns: minmax(560px, 0.98fr) minmax(420px, 1.02fr);
+    gap: 72px;
+    align-items: center;
+    text-align: center;
+  }
+  #s1 .clean-copy {
+    font-size: 16px;
+    line-height: 1.42;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  #s1 .clean-button {
+    margin-top: 24px;
+    padding: 11px 24px;
+    font-size: 15px;
+  }
+  #s1 .clean-media {
+    display: block;
+    width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+  }
+  .clean-button {
+    margin-top: 30px;
+    display: inline-flex;
+    align-items: center;
+    border: 0;
+    background: linear-gradient(135deg, #7703fc, #00C8FF);
+    color: #fff;
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 16px 32px rgba(119,3,252,0.28);
+  }
+  .clean-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 28px;
+  }
+  .clean-card {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 18px 42px rgba(16,19,42,0.07);
+  }
+  .clean-card h3 {
+    font-size: 23px;
+    line-height: 1.2;
+    color: #07080F;
+    margin-bottom: 10px;
+  }
+  .clean-card p {
+    font-size: 18px;
+    line-height: 1.38;
+    color: #5A6080;
+  }
+  .clean-number-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 34px;
+  }
+  .clean-number {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 26px 18px;
+    text-align: center;
+  }
+  .clean-number .num {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 58px;
+    line-height: 1;
+    color: #7703fc;
+  }
+  .clean-number .label {
+    font-size: 17px;
+    line-height: 1.25;
+    color: #5A6080;
+    margin-top: 8px;
+  }
+  .clean-list {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .clean-list-item {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .clean-list-item strong {
+    display: block;
+    color: #07080F;
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 7px;
+  }
+  .clean-list-item span {
+    display: block;
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.34;
+  }
+  .clean-note {
+    margin-top: 18px;
+    color: #5A6080;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+  .global-slide .clean-split {
+    grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+  }
+  .global-slide .clean-title {
+    font-size: clamp(54px, 5.6vw, 86px);
+    margin-bottom: 26px;
+  }
+  .global-slide .clean-copy {
+    max-width: 560px;
+  }
+  .global-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .global-metrics .clean-number {
+    min-height: 168px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .global-metrics .clean-number .num {
+    font-size: 70px;
+  }
+  .package-slide {
+    padding-top: 70px;
+    padding-bottom: 96px;
+  }
+  .package-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 22px;
+  }
+  .package-head .clean-title {
+    margin-bottom: 10px;
+    font-size: clamp(52px, 5.3vw, 82px);
+  }
+  .package-availability {
+    color: #7703fc;
+    font-size: 19px;
+    line-height: 1.3;
+    font-weight: 700;
+    text-align: left;
+    max-width: 520px;
+  }
+  .package-price {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 112px;
+    line-height: 0.9;
+    color: #00C8FF;
+    text-align: right;
+  }
+  .package-price span {
+    font-family: 'Noto Sans Condensed', 'Noto Sans Georgian', sans-serif;
+    font-size: 24px;
+    color: rgba(240,244,255,0.68);
+    font-weight: 500;
+  }
+  .package-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .package-feature {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 15px 18px;
+    box-shadow: 0 14px 34px rgba(16,19,42,0.06);
+  }
+  .package-feature h3 {
+    color: #07080F;
+    font-size: 20px;
+    line-height: 1.2;
+    margin-bottom: 7px;
+  }
+  .package-feature p {
+    color: #5A6080;
+    font-size: 16px;
+    line-height: 1.3;
+  }
+  .package-feature p + p {
+    margin-top: 5px;
+  }
+  .package-slide.clean-dark {
+    background:
+      radial-gradient(circle at 85% 15%, rgba(119,3,252,0.28) 0%, transparent 40%),
+      linear-gradient(135deg, #07080F 0%, #11041F 52%, #07080F 100%) !important;
+  }
+  .package-slide.clean-dark .clean-title {
+    color: #F0F4FF;
+  }
+  .package-slide.clean-dark .clean-eyebrow,
+  .package-slide.clean-dark .package-availability {
+    color: #A78BFA;
+  }
+  .package-slide.clean-dark .package-feature {
+    background: rgba(255,255,255,0.055);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: none;
+  }
+  .package-slide.clean-dark .package-feature h3 {
+    color: #F0F4FF;
+  }
+  .package-slide.clean-dark .package-feature p {
+    color: rgba(240,244,255,0.70);
+  }
+  .comparison-slide {
+    padding: 54px 86px 62px;
+    background:
+      radial-gradient(circle at 90% 10%, rgba(0,200,255,0.18) 0%, transparent 42%),
+      linear-gradient(135deg, #07080F 0%, #120525 56%, #07080F 100%) !important;
+  }
+  .comparison-head {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    align-items: center;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .comparison-head .clean-title {
+    color: #F0F4FF;
+    margin-bottom: 0;
+    font-size: clamp(36px, 3.8vw, 58px);
+  }
+  .comparison-head .clean-eyebrow {
+    color: #A78BFA;
+  }
+  .comparison-table {
+    display: grid;
+    grid-template-columns: minmax(300px, 1.4fr) repeat(4, minmax(76px, 0.5fr));
+    row-gap: 2px;
+    column-gap: 1px;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+  }
+  .comparison-cell {
+    padding: 4px 8px;
+    min-height: 22px;
+    border-right: 0;
+    border-bottom: 0;
+    color: rgba(240,244,255,0.78);
+    font-size: 10px;
+    line-height: 1.08;
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.035);
+  }
+  .comparison-cell:nth-child(5n) {
+    border-right: 0;
+  }
+  .comparison-head-cell {
+    background: rgba(0,200,255,0.14);
+    color: #F0F4FF;
+    font-weight: 700;
+    font-size: 10px;
+    justify-content: center;
+    text-align: center;
+  }
+  .comparison-feature {
+    color: #F0F4FF;
+    font-weight: 600;
+  }
+  .comparison-check {
+    justify-content: center;
+    color: #00E676;
+    font-weight: 800;
+    font-size: 12px;
+  }
+  .comparison-empty {
+    justify-content: center;
+    color: rgba(240,244,255,0.22);
+  }
+  #s4.clean-slide,
+  #s6.clean-slide {
+    padding-top: 66px;
+    padding-bottom: 76px;
+  }
+  #s4 .clean-split,
+  #s6 .clean-split {
+    gap: 40px;
+  }
+  #s4 .clean-title,
+  #s6 .clean-title {
+    font-size: clamp(42px, 4.25vw, 64px);
+    margin-bottom: 16px;
+  }
+  #s4 .clean-copy {
+    font-size: 18px;
+    line-height: 1.34;
+  }
+  #s4 .clean-list,
+  #s6 .clean-list {
+    gap: 10px;
+    margin-top: 18px;
+  }
+  #s4 .clean-list-item,
+  #s6 .clean-list-item {
+    padding: 14px 17px;
+  }
+  #s4 .clean-list-item strong,
+  #s6 .clean-list-item strong {
+    font-size: 19px;
+    margin-bottom: 4px;
+  }
+  #s4 .clean-list-item span,
+  #s6 .clean-list-item span {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+  #s4 .clean-media,
+  #s6 .clean-media {
+    max-height: 350px;
+  }
+  #s8 .clean-media { max-height: 560px; }
+
+  /* Georgian deck typography: calmer Noto treatment for Georgian readability. */
+  body,
+  button,
+  .counter,
+  .tag,
+  .clean-eyebrow,
+  .clean-title,
+  .clean-copy,
+  .clean-subtitle,
+  .hero-main,
+  .hero-support,
+  .hero-copy,
+  .package-slide,
+  .package-price,
+  .package-price span,
+  .package-feature,
+  .comparison-cell,
+  .plan-card,
+  .plan-name,
+  .plan-price,
+  .plan-period,
+  .simple-cta {
+    font-family: 'Noto Sans Georgian', 'Noto Sans Condensed', sans-serif !important;
+    letter-spacing: 0 !important;
+    font-stretch: normal;
+  }
+
+  .clean-title,
+  #s1 .hero-main,
+  #s1 .hero-support,
+  .package-head .clean-title,
+  #s9 h2,
+  .plan-name,
+  #s10.simple-cta h2 {
+    font-weight: 600;
+    line-height: 1.1;
+    transform: none;
+  }
+
+  #s1 .hero-main {
+    font-size: clamp(34px, 3.7vw, 56px);
+    max-width: 920px;
+    font-weight: 700;
+  }
+  #s1 .hero-support {
+    font-size: clamp(17px, 1.45vw, 23px);
+    line-height: 1.2;
+    max-width: 900px;
+  }
+  #s1 .hero-copy {
+    font-size: clamp(15px, 1.25vw, 19px);
+    line-height: 1.34;
+    max-width: 760px;
+  }
+  #s1 .clean-button {
+    font-size: clamp(14px, 1.15vw, 17px);
+    font-weight: 700;
+  }
+  #s1 .clean-copy {
+    font-size: clamp(13px, 0.95vw, 16px);
+    line-height: 1.38;
+    max-width: 720px;
+  }
+
+  .clean-title {
+    font-size: clamp(28px, 2.65vw, 42px);
+    line-height: 1.14;
+  }
+  #s2 .clean-title,
+  #s3 .clean-title,
+  #s4 .clean-title,
+  #s5 .clean-title,
+  #s6 .clean-title {
+    font-size: clamp(26px, 2.35vw, 38px);
+    line-height: 1.15;
+  }
+  .clean-subtitle {
+    font-size: clamp(17px, 1.35vw, 22px);
+    line-height: 1.28;
+    font-weight: 600;
+  }
+  .clean-copy {
+    font-size: clamp(15px, 1.05vw, 18px);
+    line-height: 1.38;
+  }
+  .clean-card h3,
+  .clean-list-item strong,
+  .package-feature h3 {
+    font-size: clamp(15px, 1.18vw, 19px);
+    line-height: 1.22;
+    font-weight: 600;
+  }
+  .clean-card p,
+  .clean-list-item span,
+  .package-feature p {
+    font-size: clamp(13px, 0.95vw, 15px);
+    line-height: 1.34;
+    font-weight: 400;
+  }
+
+  .package-head .clean-title {
+    font-size: clamp(36px, 3.5vw, 56px);
+    font-weight: 700;
+  }
+  .package-availability {
+    font-size: clamp(13px, 1vw, 16px);
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  .package-price {
+    font-size: clamp(54px, 5.2vw, 82px);
+    font-weight: 700;
+    transform: none;
+  }
+  .package-price span {
+    font-size: clamp(13px, 1.05vw, 17px);
+    font-weight: 500;
+  }
+
+  .comparison-head .clean-title {
+    font-size: clamp(27px, 2.35vw, 38px);
+    line-height: 1.14;
+  }
+  .comparison-cell {
+    font-size: 10.5px;
+    line-height: 1.05;
+    font-weight: 600;
+  }
+  .comparison-head-cell,
+  .comparison-check {
+    font-weight: 800;
+  }
+
+  #s9 h2 {
+    font-size: clamp(32px, 3vw, 48px);
+    line-height: 1.12;
+  }
+  .plan-name {
+    font-size: 23px;
+    font-weight: 600;
+  }
+  .plan-price {
+    font-weight: 700;
+  }
+
+  #s10.simple-cta h2 {
+    font-size: clamp(36px, 4.4vw, 64px);
+    line-height: 1.18;
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+  #s10.simple-cta .simple-phone {
+    font-family: 'Noto Sans Georgian', 'Noto Sans Condensed', sans-serif !important;
+    font-weight: 700;
+    font-size: clamp(38px, 4.5vw, 64px);
+    letter-spacing: 0.02em !important;
+  }
+  #s10.simple-cta .simple-company {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  #s10.simple-cta .simple-id {
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Logo bar -->
+<div class="logo-bar">
+  <img class="pulsar-logo" src="pulsar-logo.png" alt="Pulsar">
+  <div class="sep"></div>
+  <img class="tv-logo" src="assets/tassvision_Logo_dark.svg" alt="TassVision">
+</div>
+
+<!-- Slide counter -->
+<div class="counter"><span id="cur">01</span> / 13</div>
+
+<!-- Left arrow -->
+<div class="arrow left" id="prevBtn">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+</div>
+
+<!-- Right arrow -->
+<div class="arrow right" id="nextBtn">
+  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+</div>
+
+<!-- Dot navigation -->
+<div class="nav" id="dots"></div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 1 — HERO                                 ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide active clean-slide clean-dark" id="s1">
+  <div class="clean-inner clean-split">
+    <div>
+      <h1 class="hero-main">რეალურ დროში ანალიტიკა<br>საცალო მაღაზიებისთვის</h1>
+      <div class="hero-support">გახსენით თითოეული მაღაზიის სრული პოტენციალი</div>
+      <p class="clean-copy">AI კამერები და ჭკვიანი ანალიტიკა აკვირდება მაღაზიის შედეგებს, ეხმარება მონაცემებზე დაფუძნებულ გადაწყვეტილებებს და ზრდის გაყიდვებს 20%-მდე. მონაცემები მუშავდება მოწყობილობაზე — სწრაფად, უსაფრთხოდ და კონფიდენციალურად.</p>
+      <button class="clean-button" onclick="document.getElementById('nextBtn').click()">გაიგეთ მეტი Vitrac-ზე →</button>
+    </div>
+    <div>
+      <img class="clean-media" src="assets/main_pic.svg" alt="Sales conversion analytics">
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 2 — SALES CONVERSION                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s2">
+  <div class="clean-inner clean-split reverse">
+    <div>
+      <img class="clean-media" src="assets/Vitrac-hero-black.png" alt="Hero mockup">
+    </div>
+    <div>
+      <div class="clean-eyebrow">გაყიდვების კონვერსია</div>
+      <h2 class="clean-title">გაზომეთ ვიზიტორების ნაკადი კონვერსიის გასაზრდელად</h2>
+      <p class="clean-subtitle">
+        შეამცირეთ იმ ვიზიტორების რაოდენობა, რომლებიც მაღაზიას ყიდვის გარეშე ტოვებენ.
+      </p>
+      <p class="clean-copy">
+        TASS Vision ფიზიკურ მაღაზიებს აძლევს მკაფიო გაყიდვების funnel-ს შესვლიდან გასვლამდე, მყისიერი დატვირთულობისა და კონვერსიის ანგარიშებით, AI ტექნოლოგიით და +98% სიზუსტით.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 3 — RETAIL USE CASES                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s3">
+  <div class="clean-inner">
+    <div class="clean-eyebrow">მაღაზიის შედეგების ანალიტიკა</div>
+    <h2 class="clean-title">ოთხი გზა, როგორ აქცევს Vitrac ტრაფიკს მოქმედებად</h2>
+    <div class="clean-grid">
+      <div class="clean-card">
+        <h3>სარეკლამო კამპანიების ეფექტიანობა</h3>
+        <p>შეადარეთ ტრაფიკი კამპანიის გაშვებამდე და შემდეგ. მარკეტინგის გუნდები სწრაფად ხედავენ ტრაფიკისა და დემოგრაფიის შედეგებს.</p>
+      </div>
+      <div class="clean-card">
+        <h3>თაროების ზუსტი დაგეგმვა</h3>
+        <p>აღმოაჩინეთ ცარიელი თაროები, შეამოწმეთ ფასმაჩვენებლები და პლანოგრამის დაცვა, რათა შეამციროთ დაკარგული გაყიდვები.</p>
+      </div>
+      <div class="clean-card">
+        <h3>Heat map</h3>
+        <p>გააუმჯობესეთ განლაგება ცხელი ზონებითა და მომხმარებლის მოძრაობის რუკით. ნახეთ, რომელი ადგილებია აქტიური და რომლებს უგულებელყოფენ მომხმარებლები.</p>
+      </div>
+      <div class="clean-card">
+        <h3>ვიზიტორების AI ანალიზი</h3>
+        <p>გააანალიზეთ შესვლის ტრაფიკი, ვიზიტორთა ქცევა, მომხმარებლის ნაკადი და კონვერსიის ვარდნა მარტივი dashboard-ებით.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 4 — HOW VITRAC WORKS                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s4">
+  <div class="clean-inner clean-split">
+    <div>
+      <div class="clean-eyebrow">როგორ მუშაობს</div>
+      <h2 class="clean-title">ვიზიტორების AI ანალიზი Retail 5.0-ისთვის</h2>
+      <p class="clean-copy">
+        Vitrac აანალიზებს შესვლის ტრაფიკს და ვიზიტორთა ქცევას, აჩვენებს უხილავ დანაკარგებს და კამერის თითოეულ კადრს აქცევს გაყიდვებისა და ეფექტიანობის მონაცემად.
+      </p>
+      <div class="clean-list">
+        <div class="clean-list-item">
+          <strong>ნახეთ, სად კარგავთ მომხმარებელს</strong>
+          <span>გაიგეთ რამდენი ადამიანი შემოვიდა, ვინ არიან ისინი და სად ეცემა კონვერსია.</span>
+        </div>
+        <div class="clean-list-item">
+          <strong>მართეთ ტრაფიკი მონაცემებით</strong>
+          <span>გამოიყენეთ საათობრივი და დღიური დინამიკა პერსონალის, VM-ის, მერჩენდაიზინგისა და გაყიდვების გასაუმჯობესებლად.</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <img class="clean-media" src="assets/1_en.svg" alt="AI visitor analysis">
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 5 — WHAT VITRAC DOES                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s5">
+  <div class="clean-inner">
+    <div class="clean-eyebrow">რას აკეთებს Vitrac</div>
+    <h2 class="clean-title">მომხმარებლის ნაკადისა და ქცევის მკაფიო სურათი</h2>
+    <div class="clean-grid">
+      <div class="clean-card">
+        <h3>ვიზიტორების დათვლა</h3>
+        <p>ითვლის მაღაზიაში შემოსვლებს, გამორიცხავს პერსონალს და განმეორებით ვიზიტებს, რათა მიიღოთ სუფთა მონაცემები რეალურ მომხმარებლებზე.</p>
+      </div>
+      <div class="clean-card">
+        <h3>დემოგრაფიული ანალიტიკა</h3>
+        <p>ადგენს სქესსა და ასაკობრივ ჯგუფებს, რათა უკეთ გაიგოთ აუდიტორია და მოარგოთ მაღაზიისა და მარკეტინგის გადაწყვეტილებები.</p>
+      </div>
+      <div class="clean-card">
+        <h3>ჯგუფების ამოცნობა</h3>
+        <p>ცნობს ოჯახებსა და ჯგუფებს, რათა მიიღოთ უნიკალური ვიზიტების უფრო ზუსტი მაჩვენებლები და არა მხოლოდ საერთო headcount.</p>
+      </div>
+      <div class="clean-card">
+        <h3>ბიზნეს შედეგი</h3>
+        <p>შეამცირეთ დაკარგული ვიზიტები, გაზარდეთ კონვერსია, გააუმჯობესეთ პერსონალის განრიგი და ფოკუსირდით შემოსავლის ზრდაზე.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 6 — IMPLEMENTATION                       ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide" id="s6">
+  <div class="clean-inner clean-split reverse">
+    <div>
+      <img class="clean-media" src="assets/2_en.svg" alt="Vitrac implementation dashboard">
+    </div>
+    <div>
+      <div class="clean-eyebrow">დანერგვა და უსაფრთხოება</div>
+      <h2 class="clean-title">სწრაფი დანერგვა, დაცული მონაცემები, მკაფიო ROI</h2>
+      <div class="clean-list">
+        <div class="clean-list-item">
+          <strong>სიზუსტე და მონაცემები</strong>
+          <span>ტრაფიკის დათვლის სიზუსტე 99%-მდე, POS/ERP/DMS ინტეგრაციით შესვლიდან ყიდვამდე რეალური კონვერსიისთვის.</span>
+        </div>
+        <div class="clean-list-item">
+          <strong>ინსტალაცია</strong>
+          <span>როლებზე დაფუძნებული web და mobile dashboard-ები. ინსტალაცია, ტესტირება და onboarding დაახლოებით ერთ კვირას მოითხოვს.</span>
+        </div>
+        <div class="clean-list-item">
+          <strong>უსაფრთხოება და ROI</strong>
+          <span>დაშიფრული მონაცემები, EU სერვერები, სტანდარტულ ანალიტიკაში სახის ამოცნობის გარეშე და ტიპური payback 3–6 თვეში.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 8 — STANDARD PACKAGE                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide clean-dark package-slide" id="s-standard">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">ფუნქციების შედარება · Vitrac</div>
+        <h2 class="clean-title">STANDARD</h2>
+        <div class="package-availability">ხელმისაწვდომია ყველა პაკეტში: Standard, Plus, Pro და Enterprise</div>
+      </div>
+      <div>
+        <div class="package-price">100 <span>GEL / თვე</span></div>
+      </div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>ვიზიტორების დათვლა / პერსონალის გამორიცხვა</h3>
+        <p>ითვლის ყველა ვიზიტორს შესასვლელში და ავტომატურად გამორიცხავს პერსონალს.</p>
+        <p>vision models არ ითვლის თანამშრომლებს, რათა მიიღოთ ზუსტი მონაცემები რეალურ მომხმარებლებზე.</p>
+      </div>
+      <div class="package-feature">
+        <h3>დემოგრაფიული ანალიტიკა (ასაკი, სქესი)</h3>
+        <p>ადგენს თითოეული ვიზიტორის სქესსა და ასაკობრივ ჯგუფს.</p>
+        <p>გეხმარებათ აუდიტორიის გაგებაში და მარკეტინგის მორგებაში.</p>
+      </div>
+      <div class="package-feature">
+        <h3>AI-გენერირებული Email ანგარიშები</h3>
+        <p>ავტომატური email ანგარიშები კვირეული, თვიური ან შეთანხმებული განრიგით.</p>
+        <p>მიიღეთ ძირითადი ანალიტიკა და რჩევები სისტემაში შესვლის გარეშე.</p>
+      </div>
+      <div class="package-feature">
+        <h3>ოჯახებისა და ჯგუფების ამოცნობა</h3>
+        <p>საჭიროებისამებრ ცნობს ოჯახებსა და ჯგუფებს ერთ ერთეულად.</p>
+        <p>ქმნის უნიკალური ვიზიტების უფრო ზუსტ მაჩვენებლებს და არა მხოლოდ headcount-ს.</p>
+      </div>
+      <div class="package-feature">
+        <h3>საათობრივი / დღიური / თვიური ანგარიშები</h3>
+        <p>ანგარიშები საათის, დღის და თვის ჭრილით.</p>
+        <p>გააანალიზეთ ტრაფიკის დინამიკა, ტრენდები და სეზონურობა.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Web dashboard-ზე წვდომა</h3>
+        <p>მოსახერხებელი browser-based dashboard.</p>
+        <p>ყველა ძირითადი მეტრიკა და გრაფიკი ერთ სივრცეში, ნებისმიერ დროს.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 9 — PLUS PACKAGE                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide clean-dark package-slide" id="s-plus">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">ფუნქციების შედარება · Vitrac</div>
+        <h2 class="clean-title">PLUS</h2>
+        <div class="package-availability">ხელმისაწვდომია Plus პაკეტიდან</div>
+      </div>
+      <div>
+        <div class="package-price">170 <span>GEL / თვე</span></div>
+      </div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>POS ინტეგრაცია კონვერსიისთვის</h3>
+        <p>ზუსტი კონვერსიის თვალყურის დევნება თითოეული მაღაზიისთვის.</p>
+        <p>უფასო ინტეგრაცია 5+ მაღაზიის მქონე ქსელებისთვის.</p>
+      </div>
+      <div class="package-feature">
+        <h3>გარე Foot Traffic Analytics</h3>
+        <p>გაზომეთ ფეხით მოსიარულეთა ნაკადი მაღაზიის შესასვლელთან.</p>
+        <p>აკონტროლეთ კონვერსია გარე ტრაფიკიდან მაღაზიაში ვიზიტამდე.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Benchmarking და ბაზრის ტრენდები</h3>
+        <p>შეადარეთ ფილიალები და ინდუსტრიის ტრენდები.</p>
+        <p>ნახეთ, სად ხართ წინ და სად არის ზრდის სივრცე.</p>
+      </div>
+      <div class="package-feature">
+        <h3>რეკლამის ეფექტიანობის ანალიტიკა</h3>
+        <p>ზომავს, როგორ ზრდის მარკეტინგი ვიზიტებსა და ყიდვებს.</p>
+        <p>აკვირდება uplift-ს, ROI-ს და კონვერსიის ცვლილებას თითოეულ მაღაზიაში.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 10 — PROFESSIONAL PACKAGE                ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide clean-dark package-slide" id="s-pro">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">ფუნქციების შედარება · Vitrac</div>
+        <h2 class="clean-title">PROFESSIONAL</h2>
+        <div class="package-availability">ხელმისაწვდომია Professional პაკეტიდან</div>
+      </div>
+      <div>
+        <div class="package-price">240 <span>GEL / თვე</span></div>
+      </div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>VIP კლიენტების სიები</h3>
+        <p>ამოიცნობს დაბრუნებულ მომხმარებლებს.</p>
+        <p>გეხმარებათ ლოიალობისა და განმეორებითი ყიდვების შეფასებაში.</p>
+      </div>
+      <div class="package-feature">
+        <h3>გაზრდილი სიზუსტე (v.2 კამერა)</h3>
+        <p>Vitrac 2.0 კამერები იყენებს სახის ამოცნობას პერსონალისა და განმეორებითი ვიზიტების გამოსარიცხად 99% სიზუსტით.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Blocked list და თანამშრომლების სია</h3>
+        <p>მართეთ დაშვებული და შეზღუდული სახეები ამოცნობის წესებისთვის.</p>
+        <p>გამორიცხეთ თანამშრომლები ანალიტიკიდან, რათა ტრაფიკი და კონვერსია ზუსტი დარჩეს.</p>
+      </div>
+      <div class="package-feature">
+        <h3>პერსონალის განრიგის ოპტიმიზაცია</h3>
+        <p>რეკომენდაციები ცვლებისთვის პიკურ საათებსა და რეალურ ტრაფიკზე დაყრდნობით.</p>
+        <p>შეამცირეთ შრომითი ხარჯები გაყიდვების დაკარგვის გარეშე.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Vitrac AI</h3>
+        <p>AI მოდული ქცევის პროგნოზისა და ანომალიების აღმოჩენისთვის.</p>
+        <p>გაფრთხილებთ უჩვეულო სიტუაციებზე მანამდე, სანამ პრობლემა გაიზრდება.</p>
+      </div>
+      <div class="package-feature">
+        <h3>პროგნოზირება</h3>
+        <p>პროგნოზირებს მომავალ ტრაფიკს წარსული მონაცემების საფუძველზე.</p>
+        <p>ითვალისწინებს ამინდს, ღონისძიებებსა და სეზონურობას უფრო ზუსტი პროგნოზისთვის.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 11 — ENTERPRISE PACKAGE                  ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide clean-dark package-slide" id="s-enterprise">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">ფუნქციების შედარება · Vitrac</div>
+        <h2 class="clean-title">ENTERPRISE</h2>
+        <div class="package-availability">ხელმისაწვდომია მხოლოდ Enterprise პაკეტში</div>
+      </div>
+      <div>
+        <div class="package-price">410 <span>GEL / თვე</span></div>
+      </div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>Dwell time-ის თვალყურის დევნება</h3>
+        <p>ზომავს სხვადასხვა ზონაში გატარებულ დროს.</p>
+        <p>აფასებს ინტერესს კატეგორიების ან პრომო ზონების მიმართ.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Heatmap და ზონების ანალიტიკა</h3>
+        <p>აქტივობის heatmap-ები და ზონების ანალიზი.</p>
+        <p>ნახეთ, სად იყრის მოძრაობა თავს და რა რჩება უყურადღებოდ.</p>
+      </div>
+      <div class="package-feature">
+        <h3>მომხმარებლის ინტერაქციის მაჩვენებელი</h3>
+        <p>ზომავს ინტერაქციას პერსონალთან და პროდუქტებთან.</p>
+        <p>აფასებს ჩართულობას და მომსახურების ხარისხს.</p>
+      </div>
+      <div class="package-feature">
+        <h3>უნიკალური ვიზიტორების რაოდენობა</h3>
+        <p>გაძლევთ უნიკალური ვიზიტორების ზუსტ მაჩვენებლებს უფრო სანდო და ქმედითუნარიანი ანალიზისთვის.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 12 — FEATURE COMPARISON                  ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide comparison-slide" id="s-comparison">
+  <div class="clean-inner">
+    <div class="comparison-head">
+      <div>
+        <div class="clean-eyebrow">ფუნქციების შედარება</div>
+        <h2 class="clean-title">VITRAC პაკეტების შედარება</h2>
+      </div>
+    </div>
+    <div class="comparison-table">
+      <div class="comparison-cell comparison-head-cell">ფუნქცია</div>
+      <div class="comparison-cell comparison-head-cell">Standard</div>
+      <div class="comparison-cell comparison-head-cell">Plus</div>
+      <div class="comparison-cell comparison-head-cell">Pro</div>
+      <div class="comparison-cell comparison-head-cell">Enterprise</div>
+
+      <div class="comparison-cell comparison-feature">ვიზიტორების დათვლა (პერსონალის გამორიცხვით)</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">დემოგრაფიული ანალიტიკა (სქესი და ასაკი)</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">ოჯახებისა და ჯგუფების ამოცნობა</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">საათობრივი / დღიური / თვიური ანგარიშები</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Web dashboard-ზე წვდომა</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">მუდმივი ტექნიკური მხარდაჭერა</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Mobile dashboard</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">AI-გენერირებული Email ანგარიშები</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+
+      <div class="comparison-cell comparison-feature">რეკლამის ეფექტიანობის ანალიტიკა</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">POS ინტეგრაცია კონვერსიისთვის</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">გარე Foot Traffic Analytics</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Benchmarking და ბაზრის ტრენდები</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+
+      <div class="comparison-cell comparison-feature">პერსონალის განრიგის ოპტიმიზაცია</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">გაზრდილი სიზუსტე (v.2 კამერა)</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">VIP კლიენტების სიები</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Vitrac AI (ქცევა და ანომალიები)</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Blocked list და თანამშრომლების სია</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">რიგის მონიტორინგი</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">პროგნოზირება</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+
+      <div class="comparison-cell comparison-feature">უნიკალური ვიზიტორების რაოდენობა</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Dwell time tracking</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Heatmap და ზონების ანალიტიკა</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">მომხმარებლის ინტერაქციის მაჩვენებელი</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 9 — PRICING                              ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide" id="s9">
+  <div class="inner">
+    <div class="tag">// ფასები</div>
+    <h2>მარტივი და გამჭვირვალე ფასები</h2>
+
+    <div class="billing-toggle">
+      <div class="toggle-btn active" id="monthlyBtn" onclick="setPricing('monthly')">თვიური</div>
+      <div class="toggle-btn" id="annualBtn" onclick="setPricing('annual')">წლიური <span class="save-badge">დაზოგეთ 20%-მდე</span></div>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Standard -->
+      <div class="plan-card">
+        <div class="plan-name">Standard</div>
+        <div class="plan-desc">საწყისი პაკეტი ერთი ლოკაციის მაღაზიისთვის.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p1">100</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp1">თვეში</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>1 მაღაზიის ლოკაცია</li>
+          <li>ვიზიტორების დათვლა</li>
+          <li>დღიური ანგარიშები</li>
+          <li>7-დღიანი მონაცემების ისტორია</li>
+          <li>Email მხარდაჭერა</li>
+        </ul>
+      </div>
+      <!-- Plus -->
+      <div class="plan-card popular">
+        <div class="popular-badge">ყველაზე პოპულარული</div>
+        <div class="plan-name">Plus</div>
+        <div class="plan-desc">ზრდადი მაღაზიებისთვის, რომლებსაც უფრო ღრმა ანალიზი სჭირდებათ.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p2">170</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp2">თვეში</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>3 ლოკაციამდე</li>
+          <li>ვიზიტორების დათვლა + heat map-ები</li>
+          <li>დღიური და კვირეული ანგარიშები</li>
+          <li>30-დღიანი მონაცემების ისტორია</li>
+          <li>ზონების ანალიტიკა</li>
+          <li>პრიორიტეტული მხარდაჭერა</li>
+        </ul>
+      </div>
+      <!-- Professional -->
+      <div class="plan-card">
+        <div class="plan-name">Professional</div>
+        <div class="plan-desc">გამოცდილი რითეილერებისთვის, რომლებსაც ყველა ზონის ოპტიმიზაცია სჭირდებათ.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p3">240</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp3">თვეში</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>10 ლოკაციამდე</li>
+          <li>სრული ანალიტიკის პაკეტი</li>
+          <li>Real-time შეტყობინებები</li>
+          <li>90-დღიანი მონაცემების ისტორია</li>
+          <li>რიგის ამოცნობა</li>
+          <li>პერსონალური ანგარიშის მენეჯერი</li>
+        </ul>
+      </div>
+      <!-- Enterprise -->
+      <div class="plan-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-desc">დიდი საცალო ქსელებისთვის და შეუზღუდავი მასშტაბისთვის.</div>
+        <div class="plan-price">
+          <span class="plan-amount" id="p4">410</span>
+          <span class="plan-currency"> GEL</span>
+        </div>
+        <div class="plan-period" id="pp4">თვეში</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>შეუზღუდავი ლოკაციები</li>
+          <li>სრული ანალიტიკის პაკეტი</li>
+          <li>ინდივიდუალური ინტეგრაციები</li>
+          <li>შეუზღუდავი მონაცემების ისტორია</li>
+          <li>SLA გარანტია</li>
+          <li>ადგილზე onboarding</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 10 — CTA                                 ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide simple-cta" id="s10">
+  <div class="bg-glow"></div>
+  <div class="grid-overlay"></div>
+  <div class="inner">
+    <h2>გადაწყვიტეთ<br>ჩვენთან მუშაობა?</h2>
+    <div class="simple-phone">599 99 20 30</div>
+    <div class="simple-company">LLC PULSAR</div>
+    <div class="simple-id">ID: 438112533</div>
+  </div>
+</div>
+
+<!-- ── Scripts ────────────────────────────────────── -->
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsEl = document.getElementById('dots');
+  const cur = document.getElementById('cur');
+  let current = 0;
+  let isAnimating = false;
+
+  // Slides 2–7 are light-background slides
+  const lightSlides = new Set([1, 2, 3, 4, 5, 6]);
+
+  function applyTheme(idx) {
+    document.body.classList.toggle('is-light', lightSlides.has(idx));
+  }
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  applyTheme(0);
+
+  function goTo(idx) {
+    if (isAnimating || idx === current || idx < 0 || idx >= slides.length) return;
+    isAnimating = true;
+
+    const prev = current;
+    current = idx;
+
+    slides[prev].classList.add('exit-left');
+    slides[prev].classList.remove('active');
+
+    setTimeout(() => { slides[prev].classList.remove('exit-left'); }, 600);
+
+    slides[current].classList.add('active');
+    applyTheme(current);
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+
+    cur.textContent = String(current + 1).padStart(2, '0');
+
+    setTimeout(() => { isAnimating = false; }, 600);
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+  document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+  });
+
+  // Touch swipe
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 60) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+    touchX = null;
+  });
+
+  // Pricing toggle
+  const monthly = { p1: '100', p2: '170', p3: '240', p4: '410', period: 'თვეში' };
+  const annual  = { p1: '960', p2: '1,610', p3: '1,940', p4: '3,920', period: 'წელიწადში (წლიურად გადახდით)' };
+
+  function setPricing(mode) {
+    const data = mode === 'monthly' ? monthly : annual;
+    ['p1','p2','p3','p4'].forEach(id => {
+      document.getElementById(id).textContent = data[id];
+    });
+    ['pp1','pp2','pp3','pp4'].forEach(id => {
+      document.getElementById(id).textContent = data.period;
+    });
+    document.getElementById('monthlyBtn').classList.toggle('active', mode === 'monthly');
+    document.getElementById('annualBtn').classList.toggle('active', mode === 'annual');
+  }
+</script>
+</body>
+</html>
