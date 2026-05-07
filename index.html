@@ -136,22 +136,27 @@
   /* ── Logos bar ───────────────────────────────────── */
   .logo-bar {
     position: fixed;
-    top: 16px; left: 28px;
-    display: flex; align-items: center; gap: 16px;
+    top: 20px; left: 30px;
+    display: flex; align-items: center; gap: 10px;
     z-index: 100;
+    background: rgba(7,8,15,0.72);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 6px 11px;
+    backdrop-filter: blur(12px);
   }
   .logo-bar .tv-logo {
-    height: 32px;
+    height: 22px;
     object-fit: contain;
     filter: none;
     opacity: 1;
   }
   .logo-bar .sep {
-    width: 1px; height: 28px;
+    width: 1px; height: 22px;
     background: rgba(255,255,255,0.2);
   }
   .logo-bar .pulsar-logo {
-    height: 42px;
+    height: 27px;
     object-fit: contain;
     filter: none;
     opacity: 1;
@@ -1340,7 +1345,11 @@
   body.is-light .arrow:hover { background: rgba(0,110,255,0.1); border-color: var(--blue2); }
   body.is-light .counter { color: #8892B4; }
   body.is-light .counter span { color: var(--blue2); }
-  body.is-light .logo-bar .sep { background: rgba(0,0,0,0.15); }
+  body.is-light .logo-bar {
+    background: rgba(7,8,15,0.82);
+    border-color: rgba(255,255,255,0.14);
+  }
+  body.is-light .logo-bar .sep { background: rgba(255,255,255,0.22); }
   body.is-light .tv-logo { filter: none !important; opacity: 1 !important; }
 
   /* ═══════════════════════════════════════════════════
@@ -1729,22 +1738,44 @@
   }
   .hero-main {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(60px, 6.2vw, 96px);
-    line-height: 0.95;
+    font-size: clamp(40px, 4vw, 60px);
+    line-height: 0.98;
     letter-spacing: 0.02em;
     color: #F0F4FF;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
   .hero-support {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(34px, 3.5vw, 54px);
-    line-height: 0.98;
+    font-size: clamp(24px, 2.25vw, 36px);
+    line-height: 1;
     letter-spacing: 0.02em;
     color: rgba(240,244,255,0.72);
-    margin-bottom: 20px;
+    margin-bottom: 18px;
+  }
+  #s1.clean-slide {
+    padding: 118px 116px 92px;
+  }
+  #s1 .clean-inner {
+    width: min(1160px, 100%);
+    margin-top: 8px;
+  }
+  #s1 .clean-split {
+    grid-template-columns: minmax(0, 1fr) minmax(420px, 1fr);
+    gap: 60px;
+  }
+  #s1 .clean-copy {
+    font-size: 17px;
+    line-height: 1.38;
+    max-width: 500px;
+  }
+  #s1 .clean-button {
+    margin-top: 24px;
+    padding: 11px 24px;
+    font-size: 15px;
   }
   #s1 .clean-media {
-    max-height: 470px;
+    max-height: 430px;
+    width: 100%;
   }
   .clean-button {
     margin-top: 30px;
@@ -1864,6 +1895,55 @@
   .global-metrics .clean-number .num {
     font-size: 70px;
   }
+  .package-slide {
+    padding-top: 70px;
+    padding-bottom: 80px;
+  }
+  .package-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 26px;
+  }
+  .package-head .clean-title {
+    margin-bottom: 0;
+    font-size: clamp(52px, 5.3vw, 82px);
+  }
+  .package-availability {
+    color: #7703fc;
+    font-size: 18px;
+    line-height: 1.3;
+    font-weight: 700;
+    text-align: right;
+    max-width: 340px;
+  }
+  .package-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .package-feature {
+    background: #fff;
+    border: 1px solid rgba(16,19,42,0.08);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 14px 34px rgba(16,19,42,0.06);
+  }
+  .package-feature h3 {
+    color: #07080F;
+    font-size: 20px;
+    line-height: 1.2;
+    margin-bottom: 7px;
+  }
+  .package-feature p {
+    color: #5A6080;
+    font-size: 16px;
+    line-height: 1.3;
+  }
+  .package-feature p + p {
+    margin-top: 5px;
+  }
   #s4.clean-slide,
   #s6.clean-slide {
     padding-top: 66px;
@@ -1918,7 +1998,7 @@
 </div>
 
 <!-- Slide counter -->
-<div class="counter"><span id="cur">01</span> / 09</div>
+<div class="counter"><span id="cur">01</span> / 13</div>
 
 <!-- Left arrow -->
 <div class="arrow left" id="prevBtn">
@@ -1940,7 +2020,7 @@
   <div class="clean-inner clean-split">
     <div>
       <h1 class="hero-main">REAL-TIME ANALYTICS<br>FOR RETAIL STORES</h1>
-      <div class="hero-support">UNLOCK<br>THE FULL<br>POTENTIAL OF<br>EVERY STORE</div>
+      <div class="hero-support">Unlock the full potential of every store</div>
       <p class="clean-copy">
         AI-powered cameras and smart analytics monitor store performance, support data-based decisions, and help increase sales by up to 20%.
       </p>
@@ -1979,7 +2059,7 @@
 <div class="slide clean-slide" id="s3">
   <div class="clean-inner">
     <div class="clean-eyebrow">Store performance analytics</div>
-    <h2 class="clean-title">THREE WAYS VITRAC TURNS TRAFFIC INTO ACTION</h2>
+    <h2 class="clean-title">FOUR WAYS VITRAC TURNS TRAFFIC INTO ACTION</h2>
     <div class="clean-grid">
       <div class="clean-card">
         <h3>Ad campaign effectiveness</h3>
@@ -2121,6 +2201,172 @@
 </div>
 
 <!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 8 — STANDARD PACKAGE                     ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide package-slide" id="s-standard">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">Feature comparison · Vitrac</div>
+        <h2 class="clean-title">STANDARD</h2>
+      </div>
+      <div class="package-availability">Available in all plans: Standard, Plus, Pro, and Enterprise</div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>People counting / staff exclusion</h3>
+        <p>Counts all visitors at the entrance with automatic staff exclusion.</p>
+        <p>Uses vision models to ignore employees, giving accurate data on real customers.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Demographic analytics (age, gender)</h3>
+        <p>Determines each visitor’s gender and age group.</p>
+        <p>Helps understand your audience and tailor marketing.</p>
+      </div>
+      <div class="package-feature">
+        <h3>AI Generated Email Reports</h3>
+        <p>Automatic email reports weekly, monthly, and on agreed schedules.</p>
+        <p>Get key analytics and tips without logging in.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Family & group detection</h3>
+        <p>Recognizes families and groups as one unit when appropriate.</p>
+        <p>Creates more accurate unique-visit metrics, not just headcount.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Hourly / daily / monthly reports</h3>
+        <p>Reports with hour, day, and month breakdowns.</p>
+        <p>Analyze traffic dynamics, trends, and seasonality.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Web dashboard access</h3>
+        <p>Convenient browser-based dashboard.</p>
+        <p>All key metrics and charts in one place, anytime.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 9 — PLUS PACKAGE                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide package-slide" id="s-plus">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">Feature comparison · Vitrac</div>
+        <h2 class="clean-title">PLUS</h2>
+      </div>
+      <div class="package-availability">Available starting from Plus</div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>POS integration for conversion tracking</h3>
+        <p>Accurate conversion tracking for each store.</p>
+        <p>Free integration for retail chains with 5+ stores.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Outdoor Foot Traffic Analytics</h3>
+        <p>Measure pedestrian flow around store entrances.</p>
+        <p>Track conversion from outdoor traffic to in-store visits.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Benchmarking & market trends</h3>
+        <p>Compare branches and industry trends.</p>
+        <p>See where you lead and where to grow.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Ad effectiveness analytics</h3>
+        <p>Measures how marketing drives visits and purchases.</p>
+        <p>Tracks uplift, ROI, and conversion changes per store.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 10 — PROFESSIONAL PACKAGE                ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide package-slide" id="s-pro">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">Feature comparison · Vitrac</div>
+        <h2 class="clean-title">PROFESSIONAL</h2>
+      </div>
+      <div class="package-availability">Available starting from Professional</div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>VIP client lists</h3>
+        <p>Detects returning customers.</p>
+        <p>Helps estimate loyalty and repeat purchases.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Increased accuracy (v.2 camera)</h3>
+        <p>Powered by Vitrac 2.0 cameras using facial recognition to exclude staff and repeat visits with 99% accuracy.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Blocked list & employee list</h3>
+        <p>Manage approved and restricted faces to control recognition rules globally.</p>
+        <p>Exclude employees from analytics to keep traffic and conversion accurate.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Staff scheduling optimization</h3>
+        <p>Shift recommendations based on peak hours and real traffic.</p>
+        <p>Save labor without losing sales.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Vitrac AI</h3>
+        <p>AI module for behavior prediction and anomaly detection.</p>
+        <p>Warns you about unusual situations before they escalate.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Forecasting</h3>
+        <p>Forecasts future traffic based on previous patterns.</p>
+        <p>Considers weather, events, and seasonality for more accurate predictions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 11 — ENTERPRISE PACKAGE                  ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide package-slide" id="s-enterprise">
+  <div class="clean-inner">
+    <div class="package-head">
+      <div>
+        <div class="clean-eyebrow">Feature comparison · Vitrac</div>
+        <h2 class="clean-title">ENTERPRISE</h2>
+      </div>
+      <div class="package-availability">Available only in Enterprise</div>
+    </div>
+    <div class="package-grid">
+      <div class="package-feature">
+        <h3>Dwell time tracking</h3>
+        <p>Measures time spent in different store zones.</p>
+        <p>Evaluates interest in categories or promo areas.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Heatmap & zone analytics</h3>
+        <p>Heatmaps of activity and zone analysis.</p>
+        <p>See where movement concentrates and what is ignored.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Customer interaction rate</h3>
+        <p>Measures interaction with staff and products.</p>
+        <p>Assesses engagement and service quality.</p>
+      </div>
+      <div class="package-feature">
+        <h3>Unique visitor count</h3>
+        <p>Provides precise unique visitor metrics for more reliable and actionable insights.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 9 — PRICING                              ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
 <div class="slide" id="s9">
@@ -2246,8 +2492,8 @@
   let current = 0;
   let isAnimating = false;
 
-  // Slides 2–7 are light-background slides
-  const lightSlides = new Set([1, 2, 3, 4, 5, 6]);
+  // Slides 2–11 are light-background slides
+  const lightSlides = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
   function applyTheme(idx) {
     document.body.classList.toggle('is-light', lightSlides.has(idx));
