@@ -1194,6 +1194,20 @@
     box-shadow: 0 8px 40px rgba(0,200,255,0.3);
   }
   .contact-phone .phone-icon { font-size: 24px; }
+  #s10.simple-cta .inner {
+    max-width: 900px;
+  }
+  #s10.simple-cta h2 {
+    font-size: clamp(66px, 8vw, 118px);
+    margin-bottom: 38px;
+  }
+  #s10.simple-cta .simple-phone {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 6vw, 88px);
+    line-height: 1;
+    color: var(--blue);
+    letter-spacing: 0.04em;
+  }
   .pulsar-logo-big {
     height: 44px;
     object-fit: contain;
@@ -1918,6 +1932,19 @@
     text-align: right;
     max-width: 340px;
   }
+  .package-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 74px;
+    line-height: 0.9;
+    color: #00C8FF;
+    text-align: right;
+  }
+  .package-price span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 19px;
+    color: rgba(240,244,255,0.68);
+    font-weight: 500;
+  }
   .package-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1943,6 +1970,98 @@
   }
   .package-feature p + p {
     margin-top: 5px;
+  }
+  .package-slide.clean-dark {
+    background:
+      radial-gradient(circle at 85% 15%, rgba(119,3,252,0.28) 0%, transparent 40%),
+      linear-gradient(135deg, #07080F 0%, #11041F 52%, #07080F 100%) !important;
+  }
+  .package-slide.clean-dark .clean-title {
+    color: #F0F4FF;
+  }
+  .package-slide.clean-dark .clean-eyebrow,
+  .package-slide.clean-dark .package-availability {
+    color: #A78BFA;
+  }
+  .package-slide.clean-dark .package-feature {
+    background: rgba(255,255,255,0.055);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: none;
+  }
+  .package-slide.clean-dark .package-feature h3 {
+    color: #F0F4FF;
+  }
+  .package-slide.clean-dark .package-feature p {
+    color: rgba(240,244,255,0.70);
+  }
+  .comparison-slide {
+    padding: 54px 86px 62px;
+    background:
+      radial-gradient(circle at 90% 10%, rgba(0,200,255,0.18) 0%, transparent 42%),
+      linear-gradient(135deg, #07080F 0%, #120525 56%, #07080F 100%) !important;
+  }
+  .comparison-head {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    align-items: center;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .comparison-head .clean-title {
+    color: #F0F4FF;
+    margin-bottom: 0;
+    font-size: clamp(36px, 3.8vw, 58px);
+  }
+  .comparison-head .clean-eyebrow {
+    color: #A78BFA;
+  }
+  .comparison-table {
+    display: grid;
+    grid-template-columns: minmax(300px, 1.4fr) repeat(4, minmax(76px, 0.5fr));
+    row-gap: 2px;
+    column-gap: 1px;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+  }
+  .comparison-cell {
+    padding: 4px 8px;
+    min-height: 22px;
+    border-right: 0;
+    border-bottom: 0;
+    color: rgba(240,244,255,0.78);
+    font-size: 10px;
+    line-height: 1.08;
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.035);
+  }
+  .comparison-cell:nth-child(5n) {
+    border-right: 0;
+  }
+  .comparison-head-cell {
+    background: rgba(0,200,255,0.14);
+    color: #F0F4FF;
+    font-weight: 700;
+    font-size: 10px;
+    justify-content: center;
+    text-align: center;
+  }
+  .comparison-feature {
+    color: #F0F4FF;
+    font-weight: 600;
+  }
+  .comparison-check {
+    justify-content: center;
+    color: #00E676;
+    font-weight: 800;
+    font-size: 12px;
+  }
+  .comparison-empty {
+    justify-content: center;
+    color: rgba(240,244,255,0.22);
   }
   #s4.clean-slide,
   #s6.clean-slide {
@@ -1998,7 +2117,7 @@
 </div>
 
 <!-- Slide counter -->
-<div class="counter"><span id="cur">01</span> / 13</div>
+<div class="counter"><span id="cur">01</span> / 14</div>
 
 <!-- Left arrow -->
 <div class="arrow left" id="prevBtn">
@@ -2203,14 +2322,17 @@
 <!-- ╔══════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 8 — STANDARD PACKAGE                     ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide clean-slide package-slide" id="s-standard">
+<div class="slide clean-slide clean-dark package-slide" id="s-standard">
   <div class="clean-inner">
     <div class="package-head">
       <div>
         <div class="clean-eyebrow">Feature comparison · Vitrac</div>
         <h2 class="clean-title">STANDARD</h2>
       </div>
-      <div class="package-availability">Available in all plans: Standard, Plus, Pro, and Enterprise</div>
+      <div>
+        <div class="package-price">100 <span>GEL / month</span></div>
+        <div class="package-availability">Available in all plans: Standard, Plus, Pro, and Enterprise</div>
+      </div>
     </div>
     <div class="package-grid">
       <div class="package-feature">
@@ -2250,14 +2372,17 @@
 <!-- ╔══════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 9 — PLUS PACKAGE                         ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide clean-slide package-slide" id="s-plus">
+<div class="slide clean-slide clean-dark package-slide" id="s-plus">
   <div class="clean-inner">
     <div class="package-head">
       <div>
         <div class="clean-eyebrow">Feature comparison · Vitrac</div>
         <h2 class="clean-title">PLUS</h2>
       </div>
-      <div class="package-availability">Available starting from Plus</div>
+      <div>
+        <div class="package-price">170 <span>GEL / month</span></div>
+        <div class="package-availability">Available starting from Plus</div>
+      </div>
     </div>
     <div class="package-grid">
       <div class="package-feature">
@@ -2287,14 +2412,17 @@
 <!-- ╔══════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 10 — PROFESSIONAL PACKAGE                ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide clean-slide package-slide" id="s-pro">
+<div class="slide clean-slide clean-dark package-slide" id="s-pro">
   <div class="clean-inner">
     <div class="package-head">
       <div>
         <div class="clean-eyebrow">Feature comparison · Vitrac</div>
         <h2 class="clean-title">PROFESSIONAL</h2>
       </div>
-      <div class="package-availability">Available starting from Professional</div>
+      <div>
+        <div class="package-price">240 <span>GEL / month</span></div>
+        <div class="package-availability">Available starting from Professional</div>
+      </div>
     </div>
     <div class="package-grid">
       <div class="package-feature">
@@ -2333,14 +2461,17 @@
 <!-- ╔══════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 11 — ENTERPRISE PACKAGE                  ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide clean-slide package-slide" id="s-enterprise">
+<div class="slide clean-slide clean-dark package-slide" id="s-enterprise">
   <div class="clean-inner">
     <div class="package-head">
       <div>
         <div class="clean-eyebrow">Feature comparison · Vitrac</div>
         <h2 class="clean-title">ENTERPRISE</h2>
       </div>
-      <div class="package-availability">Available only in Enterprise</div>
+      <div>
+        <div class="package-price">410 <span>GEL / month</span></div>
+        <div class="package-availability">Available only in Enterprise</div>
+      </div>
     </div>
     <div class="package-grid">
       <div class="package-feature">
@@ -2362,6 +2493,54 @@
         <h3>Unique visitor count</h3>
         <p>Provides precise unique visitor metrics for more reliable and actionable insights.</p>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 12 — FEATURE COMPARISON                  ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="slide clean-slide comparison-slide" id="s-comparison">
+  <div class="clean-inner">
+    <div class="comparison-head">
+      <div>
+        <div class="clean-eyebrow">Feature comparison</div>
+        <h2 class="clean-title">VITRAC PLAN COMPARISON</h2>
+      </div>
+    </div>
+    <div class="comparison-table">
+      <div class="comparison-cell comparison-head-cell">Feature</div>
+      <div class="comparison-cell comparison-head-cell">Standard</div>
+      <div class="comparison-cell comparison-head-cell">Plus</div>
+      <div class="comparison-cell comparison-head-cell">Pro</div>
+      <div class="comparison-cell comparison-head-cell">Enterprise</div>
+
+      <div class="comparison-cell comparison-feature">Visitor counting (with staff exclusion)</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Demographic analytics (gender & age)</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Family and group recognition</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Hourly / daily / monthly reports</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Web dashboard access</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Ongoing Technical Support</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Mobile dashboard</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">AI Generated Email Reports</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+
+      <div class="comparison-cell comparison-feature">Ad effectiveness analytics</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">POS integration for conversion</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Outdoor Foot Traffic Analytics</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Benchmarking & market trends</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+
+      <div class="comparison-cell comparison-feature">Staff schedule optimization</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Increased accuracy (v.2 camera)</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">VIP client lists</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Vitrac AI (behavior & anomalies)</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Blocked list & employee list</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Queue monitoring</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Forecasting</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div><div class="comparison-cell comparison-check">✓</div>
+
+      <div class="comparison-cell comparison-feature">Unique visitor count</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Dwell time tracking</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Heatmap & zone analytics</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
+      <div class="comparison-cell comparison-feature">Customer interaction rate</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-empty">—</div><div class="comparison-cell comparison-check">✓</div>
     </div>
   </div>
 </div>
@@ -2463,24 +2642,12 @@
 <!-- ╔══════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 10 — CTA                                 ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
-<div class="slide" id="s10">
+<div class="slide simple-cta" id="s10">
   <div class="bg-glow"></div>
   <div class="grid-overlay"></div>
   <div class="inner">
-    <div class="tag">Get Started Today</div>
-    <h2>READY TO GROW<br>YOUR STORE?</h2>
-    <p class="sub">Contact your local Vitrac representative today for a free consultation and live demo — no commitment, no tech knowledge needed.</p>
-
-    <div class="contact-card">
-      <img class="pulsar-logo-big" src="pulsar-logo.png" alt="Pulsar">
-      <div class="contact-company">LLC PULSAR</div>
-      <div class="contact-id">ID: 438112533 &nbsp;·&nbsp; Authorised Vitrac Representative</div>
-      <div class="contact-phone">
-        <span class="phone-icon">📞</span>
-        599 99 20 30
-      </div>
-    </div>
-
+    <h2>DECIDED TO WORK<br>WITH US?</h2>
+    <div class="simple-phone">599 99 20 30</div>
   </div>
 </div>
 
@@ -2492,8 +2659,8 @@
   let current = 0;
   let isAnimating = false;
 
-  // Slides 2–11 are light-background slides
-  const lightSlides = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  // Slides 2–7 are light-background slides
+  const lightSlides = new Set([1, 2, 3, 4, 5, 6]);
 
   function applyTheme(idx) {
     document.body.classList.toggle('is-light', lightSlides.has(idx));
